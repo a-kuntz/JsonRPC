@@ -1,2 +1,3 @@
 # JsonRPC
-Modern C++ JSON RPC library
+
+Modern C++ [JSON RPC](https://www.jsonrpc.org/specification) library
