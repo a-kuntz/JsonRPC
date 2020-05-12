@@ -3,6 +3,7 @@
 [build_requires]
 gtest/1.10.0
 nlohmann_json/3.7.3
+boost/1.73.0
 
 [generators]
 cmake_find_package

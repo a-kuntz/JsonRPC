@@ -6,6 +6,7 @@ project(JsonRPC)
 
 find_package(GTest REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem program_options)
 
 ##### configuration ###########################################################
 
@@ -17,6 +18,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 ##### targets #################################################################
 
 add_subdirectory(lib)
+add_subdirectory(app)
 
 enable_testing()
 add_subdirectory(test)
