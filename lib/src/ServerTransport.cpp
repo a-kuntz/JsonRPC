@@ -1,6 +1,6 @@
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/ServerTransport.h>
-#include <jsonrpc/net/TcpSession.h>
+#include <jsonrpc/net/ServerTransportSession.h>
 
 #include <memory>
 
@@ -20,7 +20,7 @@ void ServerTransport::do_accept()
 	_acceptor.async_accept([this](boost::system::error_code ec, tcp::socket socket) {
 		if (!ec)
 		{
-			std::make_shared<TcpSession>(std::move(socket))->start();
+			std::make_shared<ServerTransportSession>(std::move(socket))->start();
 		}
 
 		do_accept();

@@ -10,14 +10,14 @@
 namespace net
 {
 
-class TcpSession : public std::enable_shared_from_this<TcpSession>
+class ServerTransportSession : public std::enable_shared_from_this<ServerTransportSession>
 {
 private:
 	boost::asio::ip::tcp::socket _socket;
 	std::string                  _data;
 
 public:
-	TcpSession(boost::asio::ip::tcp::socket socket);
+	ServerTransportSession(boost::asio::ip::tcp::socket socket);
 
 	void start();
 

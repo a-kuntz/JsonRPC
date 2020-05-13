@@ -1,5 +1,5 @@
 #include <jsonrpc/Config.h>
-#include <jsonrpc/net/TcpSession.h>
+#include <jsonrpc/net/ServerTransportSession.h>
 
 #include <chrono>
 #include <iomanip>
@@ -21,16 +21,16 @@ auto ts()
 }
 } // namespace
 
-TcpSession::TcpSession(tcp::socket socket)
+ServerTransportSession::ServerTransportSession(tcp::socket socket)
 	: _socket(std::move(socket))
 {}
 
-void TcpSession::start()
+void ServerTransportSession::start()
 {
 	do_read();
 }
 
-void TcpSession::do_read()
+void ServerTransportSession::do_read()
 {
 	auto self(shared_from_this());
 	boost::asio::async_read(
@@ -44,7 +44,7 @@ void TcpSession::do_read()
 		});
 }
 
-void TcpSession::do_write()
+void ServerTransportSession::do_write()
 {
 	auto self(shared_from_this());
 	boost::asio::async_write(
