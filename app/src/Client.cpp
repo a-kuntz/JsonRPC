@@ -1,5 +1,6 @@
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/ClientTransport.h>
+#include <jsonrpc/rpc/Client.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -23,12 +24,16 @@ int main(int argc, char* argv[])
 		net::ClientTransport transport(io_context);
 		transport.connect(argv[1], atoi(argv[2]));
 
-		std::cout << "Enter message: ";
-		std::string request;
-		std::getline(std::cin, request);
+		// std::cout << "Enter message: ";
+		// std::string request;
+		// std::getline(std::cin, request);
 
-		std::cout << "< " << request << std::endl;
-		std::cout << "> " << transport.send(request) << std::endl;
+		// std::cout << "< " << request << std::endl;
+		// std::cout << "> " << transport.send(request) << std::endl;
+
+		auto client = rpc::Client(transport);
+		client.call("foo", rpc::Json{"args"});
+		client.call("bar", rpc::Json{"params"});
 	}
 	catch (std::exception& e)
 	{

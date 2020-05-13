@@ -1,4 +1,5 @@
 #include <jsonrpc/net/ServerTransport.h>
+#include <jsonrpc/rpc/Dispatcher.h>
 
 #include <boost/asio.hpp>
 
@@ -18,7 +19,8 @@ int main(int argc, char* argv[])
 
 		boost::asio::io_context io_context;
 
-		net::ServerTransport s(io_context, std::atoi(argv[1]));
+		rpc::Dispatcher      dsp;
+		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 
 		io_context.run();
 	}
