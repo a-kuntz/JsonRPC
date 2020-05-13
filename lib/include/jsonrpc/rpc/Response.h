@@ -31,7 +31,7 @@ void to_json(Json& j, const Response& rsp)
 	}
 	else
 	{
-		throw std::logic_error("invalid response: expected exactly one of result, error.");
+		throw std::logic_error("invalid response: expected exactly one of {result, error}.");
 	}
 }
 
@@ -52,7 +52,7 @@ void from_json(const Json& json, Response& rsp)
 	}
 	else
 	{
-		throw std::logic_error("invalid response: expected exactly one of result, error.");
+		throw std::logic_error("invalid response: expected exactly one of {result, error}.");
 	}
 
 	json.at("jsonrpc").get_to(rsp.jsonrpc);
