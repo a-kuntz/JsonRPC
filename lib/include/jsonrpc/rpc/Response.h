@@ -13,7 +13,7 @@ namespace rpc
 
 struct Response
 {
-	double               jsonrpc;
+	std::string          jsonrpc;
 	std::optional<Json>  result;
 	std::optional<Error> error;
 	id_t                 id;

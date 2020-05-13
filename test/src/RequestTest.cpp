@@ -7,7 +7,7 @@
 
 TEST(testrequest, serialization)
 {
-	rpc::Request req  = {2.0, "substract", {}, "1"};
+	rpc::Request req  = {"2.0", "substract", {}, "1"};
 	rpc::Json    json = req;
 	auto         req2 = json.get<rpc::Request>();
 

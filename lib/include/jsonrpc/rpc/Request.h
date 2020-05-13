@@ -11,7 +11,7 @@ namespace rpc
 
 struct Request
 {
-	double      jsonrpc;
+	std::string jsonrpc;
 	std::string method;
 	Json        params;
 	id_t        id;
