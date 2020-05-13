@@ -1,9 +1,9 @@
 ##### lib target ##############################################################
 
 add_library(jsonrpc
-	src/Client.cpp
+	src/ClientTransport.cpp
 	src/TcpSession.cpp
-	src/Server.cpp
+	src/ServerTransport.cpp
 )
 
 target_compile_features(jsonrpc PUBLIC cxx_std_17)

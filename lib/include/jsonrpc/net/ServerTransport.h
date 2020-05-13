@@ -8,13 +8,13 @@
 namespace net
 {
 
-class Server
+class ServerTransport
 {
 private:
 	boost::asio::ip::tcp::acceptor _acceptor;
 
 public:
-	Server(boost::asio::io_context& io_context, unsigned short port);
+	ServerTransport(boost::asio::io_context& io_context, unsigned short port);
 
 private:
 	void do_accept();

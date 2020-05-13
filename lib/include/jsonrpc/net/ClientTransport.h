@@ -10,14 +10,14 @@
 namespace net
 {
 
-class Client : public ITransport
+class ClientTransport : public ITransport
 {
 private:
 	boost::asio::io_context&     _ioc;
 	boost::asio::ip::tcp::socket _socket;
 
 public:
-	Client(boost::asio::io_context& ioc);
+	ClientTransport(boost::asio::io_context& ioc);
 
 	void connect(const std::string& host, int port);
 

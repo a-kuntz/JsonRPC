@@ -1,5 +1,5 @@
 #include <jsonrpc/Config.h>
-#include <jsonrpc/net/Client.h>
+#include <jsonrpc/net/ClientTransport.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -20,15 +20,15 @@ int main(int argc, char* argv[])
 
 		boost::asio::io_context io_context;
 
-		net::Client cl(io_context);
-		cl.connect(argv[1], atoi(argv[2]));
+		net::ClientTransport transport(io_context);
+		transport.connect(argv[1], atoi(argv[2]));
 
 		std::cout << "Enter message: ";
 		std::string request;
 		std::getline(std::cin, request);
 
 		std::cout << "< " << request << std::endl;
-		std::cout << "> " << cl.send(request) << std::endl;
+		std::cout << "> " << transport.send(request) << std::endl;
 	}
 	catch (std::exception& e)
 	{

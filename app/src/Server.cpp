@@ -1,4 +1,4 @@
-#include <jsonrpc/net/Server.h>
+#include <jsonrpc/net/ServerTransport.h>
 
 #include <boost/asio.hpp>
 
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
 		boost::asio::io_context io_context;
 
-		net::Server s(io_context, std::atoi(argv[1]));
+		net::ServerTransport s(io_context, std::atoi(argv[1]));
 
 		io_context.run();
 	}

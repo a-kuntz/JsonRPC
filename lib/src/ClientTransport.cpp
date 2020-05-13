@@ -1,23 +1,23 @@
 #include <jsonrpc/Config.h>
-#include <jsonrpc/net/Client.h>
+#include <jsonrpc/net/ClientTransport.h>
 
 using boost::asio::ip::tcp;
 
 namespace net
 {
 
-Client::Client(boost::asio::io_context& ioc)
+ClientTransport::ClientTransport(boost::asio::io_context& ioc)
 	: _ioc(ioc)
 	, _socket(ioc)
 {}
 
-void Client::connect(const std::string& host, int port)
+void ClientTransport::connect(const std::string& host, int port)
 {
 	tcp::resolver resolver(_ioc);
 	boost::asio::connect(_socket, resolver.resolve(host.c_str(), std::to_string(port)));
 }
 
-std::string Client::send(const std::string& data)
+std::string ClientTransport::send(const std::string& data)
 {
 	boost::asio::write(_socket, boost::asio::buffer(data));
 
