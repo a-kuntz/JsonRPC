@@ -5,55 +5,26 @@
 
 #include <boost/asio.hpp>
 
-#include <memory>
 #include <string>
 
 namespace net
 {
 
-using boost::asio::ip::tcp;
-
 class TcpSession : public std::enable_shared_from_this<TcpSession>
 {
 private:
-	tcp::socket _socket;
-	std::string _data;
+	boost::asio::ip::tcp::socket _socket;
+	std::string                  _data;
 
 public:
-	TcpSession(tcp::socket socket)
-		: _socket(std::move(socket))
-	{}
+	TcpSession(boost::asio::ip::tcp::socket socket);
 
-	void start()
-	{
-		do_read();
-	}
+	void start();
 
 private:
-	void do_read()
-	{
-		auto self(shared_from_this());
-		boost::asio::async_read(
-			_socket, boost::asio::dynamic_buffer(_data), boost::asio::transfer_at_least(1),
-			[this, self](boost::system::error_code ec, std::size_t /*length*/) {
-				if (!ec)
-				{
-					do_write();
-				}
-			});
-	}
+	void do_read();
 
-	void do_write()
-	{
-		auto self(shared_from_this());
-		boost::asio::async_write(
-			_socket, boost::asio::buffer(_data), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
-				if (!ec)
-				{
-					do_read();
-				}
-			});
-	}
+	void do_write();
 };
 
 } // namespace net
