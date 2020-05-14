@@ -4,20 +4,30 @@
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/IDispatcher.h>
 #include <jsonrpc/net/ServerTransport.h>
+#include <jsonrpc/rpc/IMethod.h>
+#include <jsonrpc/rpc/Registry.h>
 #include <jsonrpc/rpc/Request.h>
 #include <jsonrpc/rpc/Response.h>
 #include <jsonrpc/util/Util.h>
 
-// #include <chrono>
-// #include <iomanip>
 #include <iostream>
+#include <string>
 
 namespace rpc
 {
 
 class Dispatcher : public net::IDispatcher
 {
+private:
+	Registry _registry;
+
 public:
+	template <class METHOD>
+	void add(const std::string& name)
+	{
+		_registry.emplace(name, std::make_unique<METHOD>());
+	};
+
 	std::string dispatch(const std::string& sreq) override
 	{
 		std::cout << util::ts() << " > " << sreq << std::endl;
@@ -30,7 +40,16 @@ public:
 private:
 	Response dispatch(const Request& req)
 	{
-		return Response{"2.0", req.method, {}, req.id};
+		auto method = _registry.find(req.method);
+		if (method != _registry.end())
+		{
+			auto data = method->second->call(req.params);
+			return Response{"2.0", req.method, {}, req.id};
+		}
+		else
+		{
+			return Response{"2.0", {}, RPC_ERROR(ErrorCode::METHOD_NOT_FOUND, {}), req.id};
+		}
 	}
 };
 

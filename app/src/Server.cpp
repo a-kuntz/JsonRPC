@@ -7,6 +7,22 @@
 #include <exception>
 #include <iostream>
 
+struct Foo : public rpc::IMethod
+{
+	rpc::Json call(const rpc::Json& data) override
+	{
+		return "foo called";
+	}
+};
+
+struct Bar : public rpc::IMethod
+{
+	rpc::Json call(const rpc::Json& data) override
+	{
+		return "bar called";
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	try
@@ -19,7 +35,9 @@ int main(int argc, char* argv[])
 
 		boost::asio::io_context io_context;
 
-		rpc::Dispatcher      dsp;
+		rpc::Dispatcher dsp;
+		dsp.add<Foo>("foo");
+		dsp.add<Bar>("bar");
 		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 
 		io_context.run();

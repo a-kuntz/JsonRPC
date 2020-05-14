@@ -4,9 +4,10 @@ project(JsonRPC)
 
 ##### dependencies ############################################################
 
-find_package(GTest REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem program_options)
+
+find_package(GTest REQUIRED)
 
 ##### configuration ###########################################################
 

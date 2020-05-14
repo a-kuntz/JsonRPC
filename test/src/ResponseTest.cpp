@@ -20,11 +20,11 @@ TEST(testResponse, serialize_result)
 
 TEST(testResponse, serialize_error)
 {
-	rpc::Response rsp  = {"2.0", {}, rpc::Error{1, "some-error", {}}, "1"};
+	rpc::Response rsp  = {"2.0", {}, rpc::Error{rpc::ErrorCode::INTERNAL_ERROR, "some-error", {}}, "1"};
 	rpc::Json     json = rsp;
 	auto          rsp2 = json.get<rpc::Response>();
 
-	ASSERT_EQ(R"({"error":{"code":1,"message":"some-error"},"id":"1","jsonrpc":"2.0"})", json.dump());
+	ASSERT_EQ(R"({"error":{"code":-32603,"message":"some-error"},"id":"1","jsonrpc":"2.0"})", json.dump());
 	ASSERT_EQ(rsp.jsonrpc, rsp2.jsonrpc);
 	ASSERT_EQ(!!rsp.result, !!rsp2.result);
 	ASSERT_EQ(rsp.error->code, rsp2.error->code);

@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include <iomanip>
-// #include <iostream>
 
 namespace util
 {
@@ -15,6 +14,6 @@ auto ts()
 	return std::put_time(std::localtime(&tt), "%F %T");
 }
 
-} // ns
+} // namespace util
 
 #endif // HEADER_C731E470_956A_11EA_B57A_784F43782D09

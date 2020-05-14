@@ -10,12 +10,62 @@
 namespace rpc
 {
 
+enum class ErrorCode : int
+{
+	PARSE_ERROR = -32700,      // Parse error	Invalid JSON was received by the server.
+							   // An error occurred on the server while parsing the JSON text.
+	INVALID_REQUEST  = -32600, // Invalid Request	The JSON sent is not a valid Request object.
+	METHOD_NOT_FOUND = -32601, // Method not found	The method does not exist / is not available.
+	INVALID_PARAMS   = -32602, // Invalid params	Invalid method parameter(s).
+	INTERNAL_ERROR   = -32603, // Internal error	Internal JSON-RPC error.
+							   // -32000 to -32099	Server error	Reserved for implementation-defined server-errors.
+};
+
+template <const ErrorCode>
+std::string to_string();
+
+template <>
+std::string to_string<ErrorCode::PARSE_ERROR>()
+{
+	return "Parse error";
+}
+
+template <>
+std::string to_string<ErrorCode::INVALID_REQUEST>()
+{
+	return "Invalid Request";
+}
+
+template <>
+std::string to_string<ErrorCode::METHOD_NOT_FOUND>()
+{
+	return "Method not found";
+}
+
+template <>
+std::string to_string<ErrorCode::INVALID_PARAMS>()
+{
+	return "Invalid params";
+}
+
+template <>
+std::string to_string<ErrorCode::INTERNAL_ERROR>()
+{
+	return "Internal error";
+}
+
 struct Error
 {
-	int                 code;
+	ErrorCode           code;
 	std::string         message;
 	std::optional<Json> data;
 };
+
+#define RPC_ERROR(code, data)              \
+	rpc::Error                             \
+	{                                      \
+		code, rpc::to_string<code>(), data \
+	}
 
 void to_json(Json& json, const Error& err)
 {
