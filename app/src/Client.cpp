@@ -24,16 +24,10 @@ int main(int argc, char* argv[])
 		net::ClientTransport transport(io_context);
 		transport.connect(argv[1], atoi(argv[2]));
 
-		// std::cout << "Enter message: ";
-		// std::string request;
-		// std::getline(std::cin, request);
-
-		// std::cout << "< " << request << std::endl;
-		// std::cout << "> " << transport.send(request) << std::endl;
-
 		auto client = rpc::Client(transport);
-		client.call("foo", rpc::Json{"args"});
-		client.call("bar", rpc::Json{"params"});
+		client.call("foo", {"arg1","arg2","arg3"});
+		client.call("bar", "params");
+		client.call("unknown method", {});
 	}
 	catch (std::exception& e)
 	{
