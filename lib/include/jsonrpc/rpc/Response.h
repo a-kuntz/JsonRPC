@@ -19,7 +19,7 @@ struct Response
 	id_t                 id;
 };
 
-void to_json(Json& j, const Response& rsp)
+inline void to_json(Json& j, const Response& rsp)
 {
 	if (rsp.result && !rsp.error)
 	{
@@ -35,7 +35,7 @@ void to_json(Json& j, const Response& rsp)
 	}
 }
 
-void from_json(const Json& json, Response& rsp)
+inline void from_json(const Json& json, Response& rsp)
 {
 	auto result = json.find("result");
 	auto error  = json.find("error");

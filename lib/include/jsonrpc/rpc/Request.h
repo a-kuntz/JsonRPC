@@ -17,12 +17,12 @@ struct Request
 	id_t        id;
 };
 
-void to_json(Json& json, const Request& req)
+inline void to_json(Json& json, const Request& req)
 {
 	json = Json{{"jsonrpc", req.jsonrpc}, {"method", req.method}, {"params", req.params}, {"id", req.id}};
 }
 
-void from_json(const Json& json, Request& req)
+inline void from_json(const Json& json, Request& req)
 {
 	json.at("jsonrpc").get_to(req.jsonrpc);
 	json.at("method").get_to(req.method);

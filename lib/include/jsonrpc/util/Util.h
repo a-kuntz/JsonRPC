@@ -7,7 +7,7 @@
 namespace util
 {
 
-auto ts()
+inline auto ts()
 {
 	auto pt = std::chrono::system_clock::now();
 	auto tt = std::chrono::system_clock::to_time_t(pt);

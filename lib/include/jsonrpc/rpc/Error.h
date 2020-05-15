@@ -25,31 +25,31 @@ template <const ErrorCode>
 std::string to_string();
 
 template <>
-std::string to_string<ErrorCode::PARSE_ERROR>()
+inline std::string to_string<ErrorCode::PARSE_ERROR>()
 {
 	return "Parse error";
 }
 
 template <>
-std::string to_string<ErrorCode::INVALID_REQUEST>()
+inline std::string to_string<ErrorCode::INVALID_REQUEST>()
 {
 	return "Invalid Request";
 }
 
 template <>
-std::string to_string<ErrorCode::METHOD_NOT_FOUND>()
+inline std::string to_string<ErrorCode::METHOD_NOT_FOUND>()
 {
 	return "Method not found";
 }
 
 template <>
-std::string to_string<ErrorCode::INVALID_PARAMS>()
+inline std::string to_string<ErrorCode::INVALID_PARAMS>()
 {
 	return "Invalid params";
 }
 
 template <>
-std::string to_string<ErrorCode::INTERNAL_ERROR>()
+inline std::string to_string<ErrorCode::INTERNAL_ERROR>()
 {
 	return "Internal error";
 }
@@ -67,7 +67,7 @@ struct Error
 		code, rpc::to_string<code>(), data \
 	}
 
-void to_json(Json& json, const Error& err)
+inline void to_json(Json& json, const Error& err)
 {
 	if (err.data)
 	{
@@ -79,7 +79,7 @@ void to_json(Json& json, const Error& err)
 	}
 }
 
-void from_json(const Json& json, Error& err)
+inline void from_json(const Json& json, Error& err)
 {
 	json.at("code").get_to(err.code);
 	json.at("message").get_to(err.message);
