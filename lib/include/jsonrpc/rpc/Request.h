@@ -14,7 +14,7 @@ struct Request
 	std::string jsonrpc;
 	std::string method;
 	Json        params; // TODO: param is optional
-	id_t        id;     // TODO: support allowe id types: string, number or null type
+	Json        id;     // TODO: support allowe id types: string, number or null type
 						// TODO: support notification as Request without id
 };
 
@@ -28,7 +28,7 @@ inline void from_json(const Json& json, Request& req)
 	json.at("jsonrpc").get_to(req.jsonrpc);
 	json.at("method").get_to(req.method);
 	req.params = json.at("params");
-	json.at("id").get_to(req.id);
+	req.id     = json.at("id");
 }
 
 } // namespace rpc

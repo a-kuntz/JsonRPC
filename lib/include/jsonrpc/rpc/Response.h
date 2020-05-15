@@ -16,7 +16,7 @@ struct Response
 	std::string          jsonrpc;
 	std::optional<Json>  result;
 	std::optional<Error> error;
-	id_t                 id;
+	Json                 id;
 };
 
 inline void to_json(Json& j, const Response& rsp)
@@ -56,7 +56,7 @@ inline void from_json(const Json& json, Response& rsp)
 	}
 
 	json.at("jsonrpc").get_to(rsp.jsonrpc);
-	json.at("id").get_to(rsp.id);
+	rsp.id = json.at("id");
 }
 
 } // namespace rpc

@@ -9,7 +9,6 @@ namespace rpc
 {
 
 using Json = nlohmann::json;
-using id_t = std::string;
 
 } // namespace rpc
 
