@@ -13,8 +13,9 @@ struct Request
 {
 	std::string jsonrpc;
 	std::string method;
-	Json        params;
-	id_t        id;
+	Json        params; // TODO: param is optional
+	id_t        id;     // TODO: support allowe id types: string, number or null type
+						// TODO: support notification as Request without id
 };
 
 inline void to_json(Json& json, const Request& req)
