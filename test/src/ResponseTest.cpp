@@ -5,7 +5,7 @@
 
 #include <string>
 
-TEST(testResponse, serialize_result)
+TEST(ResponseTest, SerializeResult)
 {
 	rpc::Response rsp  = {"2.0", "result-value", {}, "1"};
 	rpc::Json     json = rsp;
@@ -18,7 +18,7 @@ TEST(testResponse, serialize_result)
 	ASSERT_EQ(rsp.id, rsp2.id);
 }
 
-TEST(testResponse, serialize_error)
+TEST(ResponseTest, SerializeError)
 {
 	rpc::Response rsp  = {"2.0", {}, rpc::Error{rpc::ErrorCode::INTERNAL_ERROR, "some-error", {}}, "1"};
 	rpc::Json     json = rsp;

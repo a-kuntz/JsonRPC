@@ -5,7 +5,7 @@
 
 #include <string>
 
-TEST(testrequest, serialization)
+TEST(RequestTest, serialization)
 {
 	rpc::Request req  = {"2.0", "substract", {}, "1"};
 	rpc::Json    json = req;
