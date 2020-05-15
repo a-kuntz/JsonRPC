@@ -30,10 +30,18 @@ public:
 
 	std::string dispatch(const std::string& sreq) override
 	{
-		std::cout << util::ts() << " > " << sreq << std::endl;
+		std::cout << util::ts() << " --> " << sreq << std::endl;
 		Request req  = Json::parse(sreq);
 		auto    srsp = Json(dispatch(req)).dump();
-		std::cout << util::ts() << " < " << srsp << std::endl;
+
+		// TODO: if request without id, then request is a notification
+		// TODO: the server must not reply to a notification
+		if (req.id.is_null())
+		{
+			srsp = "";
+		}
+
+		std::cout << util::ts() << " <-- " << srsp << std::endl;
 		return srsp;
 	};
 
@@ -44,8 +52,6 @@ private:
 		if (method != _registry.end())
 		{
 			auto data = method->second->call(req.params);
-			// TODO: if request without id, then request is a notification
-			// TODO: the server must not reply to a notification
 			return Response{"2.0", data, {}, req.id};
 		}
 		else

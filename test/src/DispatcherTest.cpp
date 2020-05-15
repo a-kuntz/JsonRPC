@@ -52,22 +52,30 @@ struct Substract : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& params) override
 	{
-		int minuend = 0;
+		int minuend    = 0;
 		int subtrahend = 0;
 
 		if (params.is_array())
 		{
 			std::array<int, 2> par = params;
-			minuend = par[0];
-			subtrahend = par[1];
+			minuend                = par[0];
+			subtrahend             = par[1];
 		}
 		else if (params.is_object())
 		{
-			minuend = params.at("minuend");
+			minuend    = params.at("minuend");
 			subtrahend = params.at("subtrahend");
 		}
 
 		return minuend - subtrahend;
+	}
+};
+
+struct Notification : public rpc::IMethod
+{
+	rpc::Json call(const rpc::Json& params) override
+	{
+		return {};
 	}
 };
 
@@ -77,9 +85,12 @@ TEST(DispatcherTest, SpecificationExamples)
 {
 	rpc::Dispatcher dsp;
 	dsp.add<Substract>("subtract");
+	dsp.add<Notification>("update");
+	dsp.add<Notification>("foobar");
 
-	auto rx = [&](const std::string& s) { return rpc::Json::parse(dsp.dispatch(s)); };
-	auto tx = [&](const std::string& s) { return rpc::Json::parse(s); };
+	auto is_notification = [&](const std::string& s) { return dsp.dispatch(s) == ""; };
+	auto rx              = [&](const std::string& s) { return rpc::Json::parse(dsp.dispatch(s)); };
+	auto tx              = [&](const std::string& s) { return rpc::Json::parse(s); };
 
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}
 	// <-- {"jsonrpc": "2.0", "result": 19, "id": 1}
@@ -93,16 +104,18 @@ TEST(DispatcherTest, SpecificationExamples)
 		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2})"),
 		tx(R"({"jsonrpc": "2.0", "result": -19, "id": 2})"));
 
-// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3}
-// <-- {"jsonrpc": "2.0", "result": 19, "id": 3}
+	// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3}
+	// <-- {"jsonrpc": "2.0", "result": 19, "id": 3}
 	ASSERT_EQ(
 		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3})"),
 		tx(R"({"jsonrpc": "2.0", "result": 19, "id": 3})"));
 
-// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4}
-// <-- {"jsonrpc": "2.0", "result": 19, "id": 4}
+	// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4}
+	// <-- {"jsonrpc": "2.0", "result": 19, "id": 4}
 	ASSERT_EQ(
 		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4})"),
 		tx(R"({"jsonrpc": "2.0", "result": 19, "id": 4})"));
 
+	// --> {"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]}
+	ASSERT_TRUE(is_notification(R"({"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]})"));
 }
