@@ -52,8 +52,22 @@ struct Substract : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& params) override
 	{
-		std::array<int, 2> par = params;
-		return par[0] - par[1];
+		int minuend = 0;
+		int subtrahend = 0;
+
+		if (params.is_array())
+		{
+			std::array<int, 2> par = params;
+			minuend = par[0];
+			subtrahend = par[1];
+		}
+		else if (params.is_object())
+		{
+			minuend = params.at("minuend");
+			subtrahend = params.at("subtrahend");
+		}
+
+		return minuend - subtrahend;
 	}
 };
 
@@ -78,4 +92,17 @@ TEST(DispatcherTest, SpecificationExamples)
 	ASSERT_EQ(
 		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2})"),
 		tx(R"({"jsonrpc": "2.0", "result": -19, "id": 2})"));
+
+// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3}
+// <-- {"jsonrpc": "2.0", "result": 19, "id": 3}
+	ASSERT_EQ(
+		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3})"),
+		tx(R"({"jsonrpc": "2.0", "result": 19, "id": 3})"));
+
+// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4}
+// <-- {"jsonrpc": "2.0", "result": 19, "id": 4}
+	ASSERT_EQ(
+		rx(R"({"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4})"),
+		tx(R"({"jsonrpc": "2.0", "result": 19, "id": 4})"));
+
 }
