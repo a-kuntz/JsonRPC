@@ -6,6 +6,30 @@
 #include <array>
 #include <string>
 
+class DispatcherTest : public ::testing::Test
+{
+protected:
+	rpc::Dispatcher _dispatcher;
+
+public:
+	DispatcherTest() {}
+	~DispatcherTest() {}
+
+	bool isNotification(const std::string& s)
+	{
+		return _dispatcher.dispatch(s) == "";
+	}
+
+	rpc::Json rx(const std::string& s)
+	{
+		return rpc::Json::parse(_dispatcher.dispatch(s));
+	}
+
+	rpc::Json tx(const std::string& s)
+	{
+		return rpc::Json::parse(s);
+	}
+};
 namespace
 {
 struct Foo : public rpc::IMethod
@@ -26,23 +50,22 @@ struct Bar : public rpc::IMethod
 
 } // namespace
 
-TEST(DispatcherTest, FooBar)
+TEST_F(DispatcherTest, FooBar)
 {
-	rpc::Dispatcher dsp;
-	dsp.add<Foo>("foo");
-	dsp.add<Bar>("bar");
+	_dispatcher.add<Foo>("foo");
+	_dispatcher.add<Bar>("bar");
 
 	ASSERT_EQ(
-		dsp.dispatch(R"({"id":"1","jsonrpc":"2.0","method":"foo","params":["arg1","arg2","arg3"]})"),
-		R"({"id":"1","jsonrpc":"2.0","result":"foo called"})");
+		rx(R"({"id":"1","jsonrpc":"2.0","method":"foo","params":["arg1","arg2","arg3"]})"),
+		tx(R"({"id":"1","jsonrpc":"2.0","result":"foo called"})"));
 
 	ASSERT_EQ(
-		dsp.dispatch(R"({"id":"2","jsonrpc":"2.0","method":"bar","params":"params"})"),
-		R"({"id":"2","jsonrpc":"2.0","result":"bar called"})");
+		rx(R"({"id":"2","jsonrpc":"2.0","method":"bar","params":"params"})"),
+		tx(R"({"id":"2","jsonrpc":"2.0","result":"bar called"})"));
 
 	ASSERT_EQ(
-		dsp.dispatch(R"({"id":"3","jsonrpc":"2.0","method":"unknown method","params":null})"),
-		R"({"error":{"code":-32601,"message":"Method not found"},"id":"3","jsonrpc":"2.0"})");
+		rx(R"({"id":"3","jsonrpc":"2.0","method":"unknown method","params":null})"),
+		tx(R"({"error":{"code":-32601,"message":"Method not found"},"id":"3","jsonrpc":"2.0"})"));
 }
 
 namespace
@@ -81,16 +104,11 @@ struct Notification : public rpc::IMethod
 
 } // namespace
 
-TEST(DispatcherTest, SpecificationExamples)
+TEST_F(DispatcherTest, SpecificationExamples)
 {
-	rpc::Dispatcher dsp;
-	dsp.add<Substract>("subtract");
-	dsp.add<Notification>("update");
-	dsp.add<Notification>("foobar");
-
-	auto is_notification = [&](const std::string& s) { return dsp.dispatch(s) == ""; };
-	auto rx              = [&](const std::string& s) { return rpc::Json::parse(dsp.dispatch(s)); };
-	auto tx              = [&](const std::string& s) { return rpc::Json::parse(s); };
+	_dispatcher.add<Substract>("subtract");
+	_dispatcher.add<Notification>("update");
+	_dispatcher.add<Notification>("foobar");
 
 	// rpc call with positional parameters:
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}
@@ -120,10 +138,10 @@ TEST(DispatcherTest, SpecificationExamples)
 
 	// a Notification:
 	// --> {"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]}
-	ASSERT_TRUE(is_notification(R"({"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]})"));
+	ASSERT_TRUE(isNotification(R"({"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]})"));
 
 	// // --> {"jsonrpc": "2.0", "method": "foobar"}
-	ASSERT_TRUE(is_notification(R"({"jsonrpc": "2.0", "method": "foobar"})"));
+	ASSERT_TRUE(isNotification(R"({"jsonrpc": "2.0", "method": "foobar"})"));
 
 	// rpc call of non-existent method:
 	// --> {"jsonrpc": "2.0", "method": "foobar", "id": "1"}
@@ -151,6 +169,5 @@ TEST(DispatcherTest, SpecificationExamples)
 	// --> []
 	// <-- {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
 	ASSERT_EQ(
-		rx(R"([])"),
-		tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
+		rx(R"([])"), tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
 }
