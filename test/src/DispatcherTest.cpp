@@ -139,4 +139,18 @@ TEST(DispatcherTest, SpecificationExamples)
 	ASSERT_EQ(
 		rx(R"({"jsonrpc": "2.0", "method": "foobar, "params": "bar", "baz])"),
 		tx(R"({"jsonrpc": "2.0", "error": {"code": -32700, "message": "Parse error"}, "id": null})"));
+
+	// rpc call with invalid Request object:
+	// --> {"jsonrpc": "2.0", "method": 1, "params": "bar"}
+	// <-- {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+	ASSERT_EQ(
+		rx(R"({"jsonrpc": "2.0", "method": 1, "params": "bar"})"),
+		tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
+
+	// rpc call with an empty Array:
+	// --> []
+	// <-- {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+	ASSERT_EQ(
+		rx(R"([])"),
+		tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
 }

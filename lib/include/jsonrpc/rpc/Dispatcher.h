@@ -49,6 +49,10 @@ public:
 		{
 			str_rsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}}).dump();
 		}
+		catch (const Json::type_error& e)
+		{
+			str_rsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::INVALID_REQUEST, {}), {}}).dump();
+		}
 
 		std::cout << util::ts() << " <-- " << str_rsp << std::endl;
 		return str_rsp;
