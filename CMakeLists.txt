@@ -19,7 +19,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 ##### targets #################################################################
 
 add_subdirectory(lib)
-add_subdirectory(app)
+add_subdirectory(example)
 
 enable_testing()
 add_subdirectory(test)
