@@ -27,7 +27,7 @@ inline void from_json(const Json& json, Request& req)
 {
 	json.at("jsonrpc").get_to(req.jsonrpc);
 	json.at("method").get_to(req.method);
-	req.params = json.at("params");
+	req.params = (json.find("params") != json.end()) ? json.at("params") : Json{};
 	req.id     = (json.find("id") != json.end()) ? json.at("id") : Json{};
 }
 

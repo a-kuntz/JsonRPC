@@ -31,18 +31,27 @@ public:
 	std::string dispatch(const std::string& sreq) override
 	{
 		std::cout << util::ts() << " --> " << sreq << std::endl;
-		Request req  = Json::parse(sreq);
-		auto    srsp = Json(dispatch(req)).dump();
+		std::string str_rsp;
 
-		// TODO: if request without id, then request is a notification
-		// TODO: the server must not reply to a notification
-		if (req.id.is_null())
+		try
 		{
-			srsp = "";
+			Request req = Json::parse(sreq);
+			str_rsp     = Json(dispatch(req)).dump();
+
+			// TODO: if request without id, then request is a notification
+			// TODO: the server must not reply to a notification
+			if (req.id.is_null())
+			{
+				str_rsp = "";
+			}
+		}
+		catch (const Json::parse_error& e)
+		{
+			str_rsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}}).dump();
 		}
 
-		std::cout << util::ts() << " <-- " << srsp << std::endl;
-		return srsp;
+		std::cout << util::ts() << " <-- " << str_rsp << std::endl;
+		return str_rsp;
 	};
 
 private:
