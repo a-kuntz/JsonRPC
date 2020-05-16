@@ -30,6 +30,7 @@ public:
 		return rpc::Json::parse(s);
 	}
 };
+
 namespace
 {
 struct Foo : public rpc::IMethod
