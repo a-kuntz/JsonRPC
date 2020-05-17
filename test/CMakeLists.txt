@@ -1,5 +1,6 @@
 add_executable(testrpc
 	src/main.cpp
+	src/ClientServerTest.cpp
 	src/DispatcherTest.cpp
 	src/RequestTest.cpp
 	src/ResponseTest.cpp
