@@ -10,7 +10,8 @@ namespace net
 
 struct ITransport
 {
-	virtual std::string send(const std::string& data) = 0;
+	virtual void        send(const std::string& data) = 0;
+	virtual std::string receive()                     = 0;
 	virtual ~ITransport()                             = default;
 };
 

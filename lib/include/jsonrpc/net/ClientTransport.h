@@ -21,7 +21,8 @@ public:
 
 	void connect(const std::string& host, int port);
 
-	std::string send(const std::string& data) override;
+	void        send(const std::string& data) override;
+	std::string receive() override;
 };
 
 } // namespace net

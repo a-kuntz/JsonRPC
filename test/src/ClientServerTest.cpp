@@ -8,7 +8,11 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <chrono>
 #include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 class ClientServerTest : public ::testing::Test
 {
@@ -35,6 +39,11 @@ public:
 	{
 		_ioc.stop();
 		_thread.join();
+	}
+
+	void notify(const std::string& name, const std::string& params)
+	{
+		_client.notify(name, params);
 	}
 
 	rpc::Json call(const std::string& name, const std::string& params)
@@ -110,9 +119,13 @@ struct Notification : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& params) override
 	{
+		++cnt;
 		return {};
 	}
+	static int cnt;
 };
+
+int Notification::cnt = 0;
 
 } // namespace
 
@@ -125,35 +138,41 @@ TEST_F(ClientServerTest, SpecificationExamples)
 	// rpc call with positional parameters:
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}
 	// <-- {"jsonrpc": "2.0", "result": 19, "id": 1}
-	ASSERT_EQ(
-		call("subtract", R"([42, 23])"),
-		expect(R"(19)"));
+	ASSERT_EQ(call("subtract", R"([42, 23])"), expect(R"(19)"));
 
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2}
 	// <-- {"jsonrpc": "2.0", "result": -19, "id": 2}
-	ASSERT_EQ(
-		call("subtract", R"([23, 42])"),
-		expect(R"(-19)"));
+	ASSERT_EQ(call("subtract", R"([23, 42])"), expect(R"(-19)"));
 
 	// rpc call with named parameters:
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"subtrahend": 23, "minuend": 42}, "id": 3}
 	// <-- {"jsonrpc": "2.0", "result": 19, "id": 3}
-	ASSERT_EQ(
-		call("subtract", R"({"subtrahend": 23, "minuend": 42})"),
-		expect(R"(19)"));
+	ASSERT_EQ(call("subtract", R"({"subtrahend": 23, "minuend": 42})"), expect(R"(19)"));
 
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": {"minuend": 42, "subtrahend": 23}, "id": 4}
 	// <-- {"jsonrpc": "2.0", "result": 19, "id": 4}
-	ASSERT_EQ(
-		call("subtract", R"({"minuend": 42, "subtrahend": 23})"),
-		expect(R"(19)"));
+	ASSERT_EQ(call("subtract", R"({"minuend": 42, "subtrahend": 23})"), expect(R"(19)"));
+
+	// a Notification:
+	// --> {"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]}
+	auto start = Notification::cnt;
+	notify("update", R"([1,2,3,4,5])");
+	std::this_thread::sleep_for(1ms); // TODO: wait for signal here
+	ASSERT_EQ(1, Notification::cnt - start) << "start=" << start;
+
+	// // --> {"jsonrpc": "2.0", "method": "foobar"}
+	start = Notification::cnt;
+	notify("foobar", R"()");
+	std::this_thread::sleep_for(1ms); // TODO: wait for signal here
+	ASSERT_EQ(1, Notification::cnt - start) << "start=" << start;
 
 	// rpc call of non-existent method:
 	// --> {"jsonrpc": "2.0", "method": "foobar", "id": "1"}
 	// <-- {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": "1"}
 	// renamed foobar -> foobar__ as foobar is needed in examples above
-	ASSERT_EQ(
-		call("foobar__", R"("")"),
-		expect(R"({"code": -32601, "message": "Method not found"})"));
+	ASSERT_EQ(call("foobar__", R"("")"), expect(R"({"code": -32601, "message": "Method not found"})"));
+
+
+
 
 }

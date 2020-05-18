@@ -16,6 +16,11 @@ struct Request
 	Json        params; // TODO: param is optional
 	Json        id;     // TODO: support allowe id types: string, number or null type
 						// TODO: support notification as Request without id
+
+	bool isNotification() const
+	{
+		return id.is_null();
+	}
 };
 
 inline void to_json(Json& json, const Request& req)

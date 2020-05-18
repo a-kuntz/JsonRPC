@@ -40,13 +40,20 @@ void ServerTransportSession::do_write()
 
 	_data = _dispatcher.dispatch(_data);
 
-	boost::asio::async_write(
-		_socket, boost::asio::buffer(_data), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
-			if (!ec)
-			{
-				do_read();
-			}
-		});
+	if (_data.length())
+	{
+		boost::asio::async_write(
+			_socket, boost::asio::buffer(_data), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
+				if (!ec)
+				{
+					do_read();
+				}
+			});
+	}
+	else
+	{
+		do_read();
+	}
 }
 
 } // namespace net

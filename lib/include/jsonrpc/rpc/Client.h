@@ -37,7 +37,12 @@ public:
 			return *rsp.error;
 		}
 
-		throw std::logic_error("request without result and error");
+		throw std::logic_error("response without result and error");
+	}
+
+	void notify(const std::string name, const Json& args)
+	{
+		call(Request{"2.0", name, args, {}});
 	}
 
 private:
@@ -47,7 +52,14 @@ private:
 		auto sreq = jreq.dump();
 
 		std::cout << util::ts() << " < " << sreq << std::endl;
-		auto srsp = _transport.send(sreq);
+		_transport.send(sreq);
+
+		if (req.isNotification())
+		{
+			return {};
+		}
+
+		auto srsp = _transport.receive();
 		std::cout << util::ts() << " > " << srsp << std::endl;
 		auto jrsp = Json::parse(srsp);
 		return jrsp;

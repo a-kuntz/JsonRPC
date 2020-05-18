@@ -38,9 +38,9 @@ public:
 			Request req = Json::parse(sreq);
 			str_rsp     = Json(dispatch(req)).dump();
 
-			// TODO: if request without id, then request is a notification
-			// TODO: the server must not reply to a notification
-			if (req.id.is_null())
+			// if request without id, then request is a notification
+			// the server must not reply to a notification
+			if (req.isNotification())
 			{
 				str_rsp = "";
 			}
