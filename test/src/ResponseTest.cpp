@@ -5,6 +5,8 @@
 
 #include <string>
 
+using namespace jsonrpc;
+
 TEST(ResponseTest, SerializeResult)
 {
 	rpc::Response rsp  = {"2.0", "result-value", {}, "1"};

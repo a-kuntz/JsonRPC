@@ -5,6 +5,8 @@
 
 #include <string>
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -15,5 +17,6 @@ struct IDispatcher
 };
 
 } // namespace net
+} // namespace jsonrpc
 
 #endif // HEADER_5E86F08A_9564_11EA_AFCA_784F43782D09

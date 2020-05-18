@@ -7,6 +7,8 @@
 #include <optional>
 #include <string>
 
+namespace jsonrpc
+{
 namespace rpc
 {
 
@@ -89,5 +91,6 @@ inline void from_json(const Json& json, Error& err)
 }
 
 } // namespace rpc
+} // namespace jsonrpc
 
 #endif // HEADER_EC6C225C_9306_11EA_AB8A_784F43782D09

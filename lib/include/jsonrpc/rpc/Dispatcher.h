@@ -13,6 +13,8 @@
 #include <iostream>
 #include <string>
 
+namespace jsonrpc
+{
 namespace rpc
 {
 
@@ -75,5 +77,6 @@ private:
 };
 
 } // namespace rpc
+} // namespace jsonrpc
 
 #endif // HEADER_F4C30FD1_9561_11EA_A786_784F43782D09

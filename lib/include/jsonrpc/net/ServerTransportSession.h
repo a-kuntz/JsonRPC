@@ -8,6 +8,8 @@
 
 #include <string>
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -25,10 +27,10 @@ public:
 
 private:
 	void do_read();
-
 	void do_write();
 };
 
 } // namespace net
+} // namespace jsonrpc
 
 #endif // HEADER_F197C54C_9542_11EA_8827_784F43782D09

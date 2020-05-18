@@ -3,6 +3,8 @@
 
 using boost::asio::ip::tcp;
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -30,3 +32,4 @@ std::string ClientTransport::receive()
 }
 
 } // namespace net
+} // namespace jsonrpc

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <iomanip>
 
+namespace jsonrpc
+{
 namespace util
 {
 
@@ -15,5 +17,6 @@ inline auto ts()
 }
 
 } // namespace util
+} // namespace jsonrpc
 
 #endif // HEADER_C731E470_956A_11EA_B57A_784F43782D09

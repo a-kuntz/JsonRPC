@@ -6,6 +6,8 @@
 
 using boost::asio::ip::tcp;
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -29,3 +31,4 @@ void ServerTransport::do_accept()
 }
 
 } // namespace net
+} // namespace jsonrpc

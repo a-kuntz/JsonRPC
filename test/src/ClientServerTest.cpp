@@ -13,6 +13,7 @@
 #include <thread>
 
 using namespace std::chrono_literals;
+using namespace jsonrpc;
 
 class ClientServerTest : public ::testing::Test
 {
@@ -97,7 +98,6 @@ struct Substract : public rpc::IMethod
 		int minuend    = 0;
 		int subtrahend = 0;
 
-
 		if (params.is_array())
 		{
 			std::array<int, 2> par = params;
@@ -109,7 +109,6 @@ struct Substract : public rpc::IMethod
 			minuend    = params.at("minuend");
 			subtrahend = params.at("subtrahend");
 		}
-
 
 		return minuend - subtrahend;
 	}

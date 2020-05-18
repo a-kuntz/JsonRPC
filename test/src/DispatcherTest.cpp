@@ -6,6 +6,8 @@
 #include <array>
 #include <string>
 
+using namespace jsonrpc;
+
 class DispatcherTest : public ::testing::Test
 {
 protected:
