@@ -4,6 +4,7 @@ add_library(jsonrpc
 	src/net/ClientTransport.cpp
 	src/net/ServerTransportSession.cpp
 	src/net/ServerTransport.cpp
+	src/rpc/Client.cpp
 )
 
 target_compile_features(jsonrpc PUBLIC cxx_std_17)
