@@ -134,6 +134,8 @@ TEST_F(ClientServerTest, SpecificationExamples)
 	_dispatcher.add<Notification>("update");
 	_dispatcher.add<Notification>("foobar");
 
+	const auto delay = 100ms;
+
 	// rpc call with positional parameters:
 	// --> {"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}
 	// <-- {"jsonrpc": "2.0", "result": 19, "id": 1}
@@ -156,13 +158,13 @@ TEST_F(ClientServerTest, SpecificationExamples)
 	// --> {"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]}
 	auto start = Notification::cnt;
 	notify("update", R"([1,2,3,4,5])");
-	std::this_thread::sleep_for(1ms); // TODO: wait for signal here
+	std::this_thread::sleep_for(delay); // TODO: wait for signal here
 	ASSERT_EQ(1, Notification::cnt - start) << "start=" << start;
 
 	// // --> {"jsonrpc": "2.0", "method": "foobar"}
 	start = Notification::cnt;
 	notify("foobar", R"()");
-	std::this_thread::sleep_for(1ms); // TODO: wait for signal here
+	std::this_thread::sleep_for(delay); // TODO: wait for signal here
 	ASSERT_EQ(1, Notification::cnt - start) << "start=" << start;
 
 	// rpc call of non-existent method:
