@@ -8,6 +8,7 @@
 #include <string>
 
 using boost::asio::ip::tcp;
+using namespace jsonrpc;
 
 int main(int argc, char* argv[])
 {

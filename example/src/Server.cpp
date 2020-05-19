@@ -7,6 +7,8 @@
 #include <exception>
 #include <iostream>
 
+using namespace jsonrpc;
+
 struct Foo : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& data) override

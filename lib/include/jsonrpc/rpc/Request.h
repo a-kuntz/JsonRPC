@@ -6,6 +6,8 @@
 
 #include <string>
 
+namespace jsonrpc
+{
 namespace rpc
 {
 
@@ -16,6 +18,11 @@ struct Request
 	Json        params; // TODO: param is optional
 	Json        id;     // TODO: support allowe id types: string, number or null type
 						// TODO: support notification as Request without id
+
+	bool isNotification() const
+	{
+		return id.is_null();
+	}
 };
 
 inline void to_json(Json& json, const Request& req)
@@ -32,5 +39,6 @@ inline void from_json(const Json& json, Request& req)
 }
 
 } // namespace rpc
+} // namespace jsonrpc
 
 #endif // HEADER_2F59322E_92F7_11EA_9544_784F43782D09

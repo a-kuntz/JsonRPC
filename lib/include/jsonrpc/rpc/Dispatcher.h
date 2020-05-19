@@ -13,6 +13,8 @@
 #include <iostream>
 #include <string>
 
+namespace jsonrpc
+{
 namespace rpc
 {
 
@@ -38,9 +40,9 @@ public:
 			Request req = Json::parse(sreq);
 			str_rsp     = Json(dispatch(req)).dump();
 
-			// TODO: if request without id, then request is a notification
-			// TODO: the server must not reply to a notification
-			if (req.id.is_null())
+			// if request without id, then request is a notification
+			// the server must not reply to a notification
+			if (req.isNotification())
 			{
 				str_rsp = "";
 			}
@@ -75,5 +77,6 @@ private:
 };
 
 } // namespace rpc
+} // namespace jsonrpc
 
 #endif // HEADER_F4C30FD1_9561_11EA_A786_784F43782D09

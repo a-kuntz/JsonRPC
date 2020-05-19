@@ -6,6 +6,8 @@
 
 #include <boost/asio.hpp>
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -23,5 +25,6 @@ private:
 };
 
 } // namespace net
+} // namespace jsonrpc
 
 #endif // HEADER_CC88E9B5_9542_11EA_AB30_784F43782D09

@@ -6,6 +6,8 @@
 
 #include <string>
 
+namespace jsonrpc
+{
 namespace rpc
 {
 
@@ -16,5 +18,6 @@ struct IMethod
 };
 
 } // namespace rpc
+} // namespace jsonrpc
 
 #endif // HEADER_0A456FA8_9619_11EA_9CBF_784F43782D09

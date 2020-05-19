@@ -3,6 +3,8 @@
 
 using boost::asio::ip::tcp;
 
+namespace jsonrpc
+{
 namespace net
 {
 
@@ -17,13 +19,17 @@ void ClientTransport::connect(const std::string& host, int port)
 	boost::asio::connect(_socket, resolver.resolve(host.c_str(), std::to_string(port)));
 }
 
-std::string ClientTransport::send(const std::string& data)
+void ClientTransport::send(const std::string& data)
 {
 	boost::asio::write(_socket, boost::asio::buffer(data));
+}
 
+std::string ClientTransport::receive()
+{
 	std::string reply;
 	auto        n = boost::asio::read(_socket, boost::asio::dynamic_buffer(reply), boost::asio::transfer_at_least(1));
 	return reply.substr(0, n);
 }
 
 } // namespace net
+} // namespace jsonrpc
