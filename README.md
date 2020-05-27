@@ -17,22 +17,13 @@ struct Foo : public rpc::IMethod
 
 int main(int argc, char* argv[])
 {
-    try
-    {
-        boost::asio::io_context io_context;
+    boost::asio::io_context io_context;
 
-        rpc::Dispatcher dispatcher;
-        dispatcher.add<Foo>("foo");
-        net::ServerTransport st(io_context, 5555, dispatcher);
+    rpc::Dispatcher dispatcher;
+    dispatcher.add<Foo>("foo");
+    net::ServerTransport st(io_context, 5555, dispatcher);
 
-        io_context.run();
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
-
-    return 0;
+    io_context.run();
 }
 ```
 
@@ -43,22 +34,13 @@ See [server example](example/src/Server.cpp)
 ```c++
 int main(int argc, char* argv[])
 {
-    try
-    {
-        boost::asio::io_context io_context;
+    boost::asio::io_context io_context;
 
-        net::ClientTransport transport(io_context);
-        transport.connect("localhost", 5555);
+    net::ClientTransport transport(io_context);
+    transport.connect("localhost", 5555);
 
-        auto client = rpc::Client(transport);
-        client.call("foo", {"arg1", "arg2", "arg3"});
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
-
-    return 0;
+    auto client = rpc::Client(transport);
+    client.call("foo", {"arg1", "arg2", "arg3"});
 }
 ```
 
