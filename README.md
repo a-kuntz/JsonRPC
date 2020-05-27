@@ -11,7 +11,8 @@ struct Foo : public rpc::IMethod
 {
     rpc::Json call(const rpc::Json& data) override
     {
-      return "foo called";
+        // your custom foo implementation
+        return "foo called";
     }
 };
 
