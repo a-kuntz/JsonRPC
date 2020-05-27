@@ -172,8 +172,4 @@ TEST_F(ClientServerTest, SpecificationExamples)
 	// <-- {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": "1"}
 	// renamed foobar -> foobar__ as foobar is needed in examples above
 	ASSERT_EQ(call("foobar__", R"("")"), expect(R"({"code": -32601, "message": "Method not found"})"));
-
-
-
-
 }
