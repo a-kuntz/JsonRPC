@@ -2,6 +2,68 @@
 
 Modern C++ [JSON RPC](https://www.jsonrpc.org/specification) library
 
+## usage
+
+### server
+
+```c++
+struct Foo : public rpc::IMethod
+{
+    rpc::Json call(const rpc::Json& data) override
+    {
+      return "foo called";
+    }
+};
+
+int main(int argc, char* argv[])
+{
+    try
+    {
+        boost::asio::io_context io_context;
+
+        rpc::Dispatcher dispatcher;
+        dispatcher.add<Foo>("foo");
+        net::ServerTransport st(io_context, 5555, dispatcher);
+
+        io_context.run();
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+
+    return 0;
+}
+```
+
+see [server example](example/src/Server.cpp)
+
+### client
+
+```c++
+int main(int argc, char* argv[])
+{
+    try
+    {
+        boost::asio::io_context io_context;
+
+        net::ClientTransport transport(io_context);
+        transport.connect("localhost", 5555);
+
+        auto client = rpc::Client(transport);
+        client.call("foo", {"arg1", "arg2", "arg3"});
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+
+    return 0;
+}
+```
+
+see [client example](example/src/Client.cpp)
+
 ## build
 
 see [`scripts/build.sh`](scripts/build.sh) or do
