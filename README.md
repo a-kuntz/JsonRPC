@@ -26,3 +26,11 @@ The following dependencies are handled by `conan`, see [`conanfile.txt`](conanfi
 cd build
 conan install ..
 ```
+
+### toolchain
+
+| tool      | requirement    |
+| --------- | -------------- |
+| g++/clang | c++17          |
+| cmake     | version 3.12   |
+| conan     | version 1.25.1 |
