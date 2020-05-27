@@ -1,10 +1,10 @@
 # JsonRPC
 
-Modern C++ [JSON RPC](https://www.jsonrpc.org/specification) library
+Modern C++ [JSON RPC 2.0](https://www.jsonrpc.org/specification) library
 
-## usage
+## Usage
 
-### server
+### Server
 
 ```c++
 struct Foo : public rpc::IMethod
@@ -36,9 +36,9 @@ int main(int argc, char* argv[])
 }
 ```
 
-see [server example](example/src/Server.cpp)
+See [server example](example/src/Server.cpp)
 
-### client
+### Client
 
 ```c++
 int main(int argc, char* argv[])
@@ -62,11 +62,15 @@ int main(int argc, char* argv[])
 }
 ```
 
-see [client example](example/src/Client.cpp)
+See [client example](example/src/Client.cpp)
 
-## build
+### Examples
 
-see [`scripts/build.sh`](scripts/build.sh) or do
+You can find plenty of usage examples in the test folder, in particular see [client server test](test/src/ClientServerTest.cpp).
+
+## Build
+
+See [`scripts/build.sh`](scripts/build.sh) or do
 
 ```shell
 mkdir build; cd build
@@ -75,7 +79,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_paths.cmake
 make all test
 ```
 
-### dependencies
+### Dependencies
 
 The following dependencies are handled by `conan`, see [`conanfile.txt`](conanfile.txt):
 
@@ -89,7 +93,7 @@ cd build
 conan install ..
 ```
 
-### toolchain
+### Toolchain
 
 | tool      | requirement    |
 | --------- | -------------- |
