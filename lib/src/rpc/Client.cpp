@@ -39,7 +39,7 @@ Response Client::call(const Request& req)
 	Json jreq = req;
 	auto sreq = jreq.dump();
 
-	std::cout << util::ts() << " < " << sreq << std::endl;
+	std::cout << util::ts() << " <<< " << sreq << std::endl;
 	_transport.send(sreq);
 
 	if (req.isNotification())
@@ -48,7 +48,7 @@ Response Client::call(const Request& req)
 	}
 
 	auto srsp = _transport.receive();
-	std::cout << util::ts() << " > " << srsp << std::endl;
+	std::cout << util::ts() << " >>> " << srsp << std::endl;
 	auto jrsp = Json::parse(srsp);
 	return jrsp;
 }

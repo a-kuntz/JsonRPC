@@ -97,6 +97,21 @@ struct Subtract : public rpc::IMethod
 	}
 };
 
+struct Sum : public rpc::IMethod
+{
+	rpc::Json call(const rpc::Json& params) override
+	{
+		int sum = 0;
+
+		for (const int val : params)
+		{
+			sum += val;
+		}
+
+		return sum;
+	}
+};
+
 struct Notification : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& params) override
@@ -221,4 +236,22 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	//         {"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}
 	//     ]
 	// <-- //Nothing is returned for all notification batches
+}
+
+TEST_F(DispatcherTest, BatchProcessingExamples)
+{
+	_dispatcher.add<Sum>("sum");
+	_dispatcher.add<Notification>("notify");
+
+	ASSERT_EQ(
+		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"}])"),
+		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"}])"));
+
+	ASSERT_EQ(
+		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "2"}])"),
+		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"},{"jsonrpc": "2.0", "result": 7, "id": "2"}])"));
+
+	ASSERT_EQ(
+		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},{"jsonrpc": "2.0", "method": "notify", "params": [1,2,4]},{"jsonrpc": "2.0", "method": "sum", "params": [2,4,6], "id": "2"}])"),
+		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"},{"jsonrpc": "2.0", "result": 12, "id": "2"}])"));
 }

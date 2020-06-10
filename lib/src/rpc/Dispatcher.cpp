@@ -13,32 +13,59 @@ namespace rpc
 std::string Dispatcher::dispatch(const std::string& sreq)
 {
 	std::cout << util::ts() << " --> " << sreq << std::endl;
-	std::string str_rsp;
+	Json jrsp;
 
 	try
 	{
-		Request req = Json::parse(sreq);
-		str_rsp     = Json(dispatch(req)).dump();
+		const auto jreq = Json::parse(sreq);
+		jrsp            = (jreq.is_array() && jreq.size() > 0) ? batch(jreq) : dispatch(jreq);
+	}
+	catch (const Json::parse_error& e)
+	{
+		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}});
+	}
+
+	const auto str_rsp = !jrsp.is_null() ? jrsp.dump() : "";
+	std::cout << util::ts() << " <-- " << str_rsp << std::endl;
+	return str_rsp;
+};
+
+Json Dispatcher::batch(const Json& jreq)
+{
+	Json jrsp = Json::array();
+	for (const auto& req : jreq)
+	{
+		const auto rsp = dispatch(req);
+		if (!rsp.is_null())
+		{
+			jrsp.push_back(rsp);
+		}
+	}
+
+	return jrsp;
+}
+
+Json Dispatcher::dispatch(const Json& jreq)
+{
+	Json jrsp;
+	try
+	{
+		Request req = jreq;
+		jrsp        = Json(dispatch(req));
 
 		// if request without id, then request is a notification
 		// the server must not reply to a notification
 		if (req.isNotification())
 		{
-			str_rsp = "";
+			jrsp = Json();
 		}
-	}
-	catch (const Json::parse_error& e)
-	{
-		str_rsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}}).dump();
 	}
 	catch (const Json::type_error& e)
 	{
-		str_rsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::INVALID_REQUEST, {}), {}}).dump();
+		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::INVALID_REQUEST, {}), {}});
 	}
-
-	std::cout << util::ts() << " <-- " << str_rsp << std::endl;
-	return str_rsp;
-};
+	return jrsp;
+}
 
 Response Dispatcher::dispatch(const Request& req)
 {
