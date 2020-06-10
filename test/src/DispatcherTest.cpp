@@ -215,9 +215,11 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	//   {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
 	//   {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
 	// ]
-	ASSERT_EQ(
-		rx(R"([1,2,3])"),
-		tx(R"([{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}])"));
+	ASSERT_EQ(rx(R"([1,2,3])"), tx(R"([
+			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
+			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
+			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+		])"));
 
 	// rpc call Batch:
 	// --> [
@@ -243,7 +245,10 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	//     ]
 	// <-- //Nothing is returned for all notification batches
 	ASSERT_TRUE(isNotification(
-		R"([{"jsonrpc": "2.0", "method": "notify_sum", "params": [1,2,4]},{"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}])"));
+		R"([
+			{"jsonrpc": "2.0", "method": "notify_sum", "params": [1,2,4]},
+			{"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}
+		])"));
 }
 
 TEST_F(DispatcherTest, BatchProcessingExamples)
@@ -256,12 +261,25 @@ TEST_F(DispatcherTest, BatchProcessingExamples)
 		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"}])"));
 
 	ASSERT_EQ(
-		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "2"}])"),
-		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"},{"jsonrpc": "2.0", "result": 7, "id": "2"}])"));
+		rx(R"([
+			{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},
+			{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "2"}
+		])"),
+		tx(R"([
+			{"jsonrpc": "2.0", "result": 7, "id": "1"},
+			{"jsonrpc": "2.0", "result": 7, "id": "2"}
+		])"));
 
 	ASSERT_EQ(
-		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},{"jsonrpc": "2.0", "method": "notify", "params": [1,2,4]},{"jsonrpc": "2.0", "method": "sum", "params": [2,4,6], "id": "2"}])"),
-		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"},{"jsonrpc": "2.0", "result": 12, "id": "2"}])"));
+		rx(R"([
+			{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},
+			{"jsonrpc": "2.0", "method": "notify", "params": [1,2,4]},
+			{"jsonrpc": "2.0", "method": "sum", "params": [2,4,6], "id": "2"}
+		])"),
+		tx(R"([
+			{"jsonrpc": "2.0", "result": 7, "id": "1"},
+			{"jsonrpc": "2.0", "result": 12, "id": "2"}
+		])"));
 }
 
 TEST_F(DispatcherTest, InvalidRequestExamples)
@@ -274,9 +292,9 @@ TEST_F(DispatcherTest, InvalidRequestExamples)
 		rx(R"([
 			{"foo": "boo"},
 			{"foo": "boo"}
-			])"),
+		])"),
 		tx(R"([
 			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
 			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
-			])"));
+		])"));
 }
