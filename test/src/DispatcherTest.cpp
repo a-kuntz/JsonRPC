@@ -204,6 +204,9 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	// <-- [
 	//   {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
 	// ]
+	ASSERT_EQ(
+		rx(R"([1])"),
+		tx(R"([{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}])"));
 
 	// rpc call with invalid Batch:
 	// --> [1,2,3]
@@ -212,6 +215,9 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	//   {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
 	//   {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
 	// ]
+	ASSERT_EQ(
+		rx(R"([1,2,3])"),
+		tx(R"([{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}])"));
 
 	// rpc call Batch:
 	// --> [
