@@ -74,7 +74,7 @@ TEST_F(DispatcherTest, FooBar)
 namespace
 {
 
-struct Substract : public rpc::IMethod
+struct Subtract : public rpc::IMethod
 {
 	rpc::Json call(const rpc::Json& params) override
 	{
@@ -109,7 +109,7 @@ struct Notification : public rpc::IMethod
 
 TEST_F(DispatcherTest, SpecificationExamples)
 {
-	_dispatcher.add<Substract>("subtract");
+	_dispatcher.add<Subtract>("subtract");
 	_dispatcher.add<Notification>("update");
 	_dispatcher.add<Notification>("foobar");
 
