@@ -263,3 +263,20 @@ TEST_F(DispatcherTest, BatchProcessingExamples)
 		rx(R"([{"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},{"jsonrpc": "2.0", "method": "notify", "params": [1,2,4]},{"jsonrpc": "2.0", "method": "sum", "params": [2,4,6], "id": "2"}])"),
 		tx(R"([{"jsonrpc": "2.0", "result": 7, "id": "1"},{"jsonrpc": "2.0", "result": 12, "id": "2"}])"));
 }
+
+TEST_F(DispatcherTest, InvalidRequestExamples)
+{
+	ASSERT_EQ(
+		rx(R"({"foo": "boo"})"),
+		tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
+
+	ASSERT_EQ(
+		rx(R"([
+			{"foo": "boo"},
+			{"foo": "boo"}
+			])"),
+		tx(R"([
+			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null},
+			{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+			])"));
+}

@@ -64,6 +64,10 @@ Json Dispatcher::dispatch(const Json& jreq)
 	{
 		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::INVALID_REQUEST, {}), {}});
 	}
+	catch (const Json::exception& e)
+	{
+		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::INVALID_REQUEST, {}), {}});
+	}
 	return jrsp;
 }
 
