@@ -242,6 +242,8 @@ TEST_F(DispatcherTest, SpecificationExamples)
 	//         {"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}
 	//     ]
 	// <-- //Nothing is returned for all notification batches
+	ASSERT_TRUE(isNotification(
+		R"([{"jsonrpc": "2.0", "method": "notify_sum", "params": [1,2,4]},{"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}])"));
 }
 
 TEST_F(DispatcherTest, BatchProcessingExamples)

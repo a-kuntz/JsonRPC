@@ -18,14 +18,14 @@ std::string Dispatcher::dispatch(const std::string& sreq)
 	try
 	{
 		const auto jreq = Json::parse(sreq);
-		jrsp            = (jreq.is_array() && jreq.size() > 0) ? batch(jreq) : dispatch(jreq);
+		jrsp            = (jreq.is_array() && !jreq.empty()) ? batch(jreq) : dispatch(jreq);
 	}
 	catch (const Json::parse_error& e)
 	{
 		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}});
 	}
 
-	const auto str_rsp = !jrsp.is_null() ? jrsp.dump() : "";
+	const auto str_rsp = jrsp.is_null() || (jrsp.is_array() && jrsp.empty()) ? "" : jrsp.dump();
 	std::cout << util::ts() << " <-- " << str_rsp << std::endl;
 	return str_rsp;
 };
