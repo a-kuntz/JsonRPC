@@ -30,6 +30,8 @@ public:
 	std::string dispatch(const std::string& sreq) override;
 
 private:
+	Json     batch(const Json& req);
+	Json     dispatch(const Json& req);
 	Response dispatch(const Request& req);
 };
 

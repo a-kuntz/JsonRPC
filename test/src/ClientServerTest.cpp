@@ -172,4 +172,25 @@ TEST_F(ClientServerTest, SpecificationExamples)
 	// <-- {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": "1"}
 	// renamed foobar -> foobar__ as foobar is needed in examples above
 	ASSERT_EQ(call("foobar__", R"("")"), expect(R"({"code": -32601, "message": "Method not found"})"));
+
+	// TODO: change client interface to take a string, not a json
+	// rpc call with invalid JSON:
+	// --> {"jsonrpc": "2.0", "method": "foobar, "params": "bar", "baz]
+	// <-- {"jsonrpc": "2.0", "error": {"code": -32700, "message": "Parse error"}, "id": null}
+	// ASSERT_EQ(
+	// 	rx(R"({"jsonrpc": "2.0", "method": "foobar, "params": "bar", "baz])"),
+	// 	tx(R"({"jsonrpc": "2.0", "error": {"code": -32700, "message": "Parse error"}, "id": null})"));
+
+	// rpc call with invalid Request object:
+	// --> {"jsonrpc": "2.0", "method": 1, "params": "bar"}
+	// <-- {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+	// ASSERT_EQ(
+	// 	rx(R"({"jsonrpc": "2.0", "method": 1, "params": "bar"})"),
+	// 	tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
+
+	// rpc call with an empty Array:
+	// --> []
+	// <-- {"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}
+	// ASSERT_EQ(
+	// 	rx(R"([])"), tx(R"({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null})"));
 }
