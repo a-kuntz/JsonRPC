@@ -53,7 +53,7 @@ public:
 			[this, self, completion, req](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
-					std::cout << util::ts() << fmt::format(" <<< {}\n", req);
+					std::cout << fmt::format("{} <<< {}\n", util::ts(), req);
 
 					receive(completion);
 				}
@@ -82,7 +82,7 @@ private:
 				if (!ec)
 				{
 					auto srsp = _data;
-					std::cout << util::ts() << " >>> " << srsp << std::endl;
+					std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
 
 					auto rsp = Response(Json::parse(srsp));
 
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 	{
 		if (argc != 3)
 		{
-			std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
+			std::cerr << fmt::format("Usage: {} <host> <port>\n", argv[0]);
 			return 1;
 		}
 
@@ -118,15 +118,15 @@ int main(int argc, char* argv[])
 		// std::thread t([&io_context]() { io_context.run(); });
 
 		client->call("foo", Json::parse(R"([42, 23])"), [](const Client::ResultType& res) {
-			std::cout << "res=" << res << std::endl;
+			std::cout << fmt::format("res={}\n", res);
 		});
 
 		// client->call("bar", Json::parse(R"("params")"), [](const Client::ResultType& res) {
-		// 	std::cout << "res=" << res << std::endl;
+		// std::cout << fmt::format("res={}\n", res);
 		// });
 
 		// client->call("unknown method", Json(), [](const Client::ResultType& res) {
-		// 	std::cout << "res=" << res << std::endl;
+		// std::cout << fmt::format("res={}\n", res);
 		// });
 
 		io_context.run();

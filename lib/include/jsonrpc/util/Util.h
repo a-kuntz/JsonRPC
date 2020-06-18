@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <iomanip>
+#include <sstream>
 
 namespace jsonrpc
 {
@@ -13,7 +14,10 @@ inline auto ts()
 {
 	auto pt = std::chrono::system_clock::now();
 	auto tt = std::chrono::system_clock::to_time_t(pt);
-	return std::put_time(std::localtime(&tt), "%F %T");
+
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&tt), "%F %T");
+	return ss.str();
 }
 
 } // namespace util
