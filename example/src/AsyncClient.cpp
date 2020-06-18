@@ -1,6 +1,4 @@
 #include <jsonrpc/Config.h>
-// #include <jsonrpc/net/async/ClientTransport.h>
-// #include <jsonrpc/rpc/async/Client.h>
 #include <jsonrpc/rpc/Json.h>
 #include <jsonrpc/rpc/Request.h>
 #include <jsonrpc/rpc/Response.h>
@@ -36,7 +34,12 @@ public:
 		: _ioc(ioc)
 		, _socket(ioc)
 	{
-		doConnect(endpoints);
+		boost::asio::async_connect(_socket, endpoints, [this](boost::system::error_code ec, tcp::endpoint) {
+			if (ec)
+			{
+				std::cerr << "error on connect: " << ec << std::endl;
+			}
+		});
 	}
 
 	void call(const std::string& name, const Json& args, Completion completion)
@@ -67,16 +70,6 @@ public:
 	}
 
 private:
-	void doConnect(const tcp::resolver::results_type& endpoints)
-	{
-		boost::asio::async_connect(_socket, endpoints, [this](boost::system::error_code ec, tcp::endpoint) {
-			if (ec)
-			{
-				std::cerr << "error on connect: " << ec << std::endl;
-			}
-		});
-	}
-
 	void receive(Completion completion)
 	{
 		auto self(shared_from_this());
@@ -135,14 +128,6 @@ int main(int argc, char* argv[])
 		// client->call("unknown method", Json(), [](const Client::ResultType& res) {
 		// 	std::cout << "res=" << res << std::endl;
 		// });
-
-		// net::async::ClientTransport transport(io_context);
-		// transport.connect(argv[1], atoi(argv[2]));
-
-		// auto client = rpc::async::Client(transport);
-		// client.call("foo", {"arg1", "arg2", "arg3"});
-		// client.call("bar", "params");
-		// client.call("unknown method", {});
 
 		io_context.run();
 		client->close();
