@@ -14,6 +14,7 @@ target_compile_features(jsonrpc PUBLIC cxx_std_17)
 
 target_link_libraries(jsonrpc PUBLIC nlohmann_json::nlohmann_json)
 target_link_libraries(jsonrpc PUBLIC Boost::Boost)
+target_link_libraries(jsonrpc PUBLIC fmt::fmt)
 
 ##### generate and include config header ######################################
 

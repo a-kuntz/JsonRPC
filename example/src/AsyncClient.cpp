@@ -3,8 +3,11 @@
 // #include <jsonrpc/rpc/async/Client.h>
 #include <jsonrpc/rpc/Json.h>
 #include <jsonrpc/rpc/Request.h>
+#include <jsonrpc/rpc/Response.h>
+#include <jsonrpc/util/Util.h>
 
 #include <boost/asio.hpp>
+#include <fmt/format.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -14,6 +17,7 @@
 #include <thread>
 
 using boost::asio::ip::tcp;
+using namespace jsonrpc;
 using namespace jsonrpc::rpc;
 
 class Client : public std::enable_shared_from_this<Client>
@@ -25,7 +29,8 @@ private:
 	int                      _id;
 
 public:
-	using Completion = std::function<void(const std::string&)>;
+	using ResultType = Json;
+	using Completion = std::function<void(const ResultType&)>;
 
 	Client(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
 		: _ioc(ioc)
@@ -36,7 +41,7 @@ public:
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
-		auto req = Json{Request{"2.0", name, args, std::to_string(++_id)}}.dump();
+		std::string req = Json(Request{"2.0", name, args, std::to_string(++_id)}).dump();
 
 		auto self(shared_from_this());
 
@@ -45,7 +50,8 @@ public:
 			[this, self, completion, req](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
-					std::cout << "< " << req << std::endl;
+					std::cout << util::ts() << fmt::format(" <<< {}\n", req);
+
 					receive(completion);
 				}
 				else
@@ -82,8 +88,19 @@ private:
 			[this, self, completion](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					std::cout << "> " << _data << std::endl;
-					completion(_data);
+					auto srsp = _data;
+					std::cout << util::ts() << " >>> " << srsp << std::endl;
+
+					auto rsp = Response(Json::parse(srsp));
+
+					if (rsp.result)
+					{
+						completion(Json(*rsp.result));
+					}
+					else if (rsp.error)
+					{
+						completion(Json(*rsp.error));
+					}
 				}
 			});
 	}
@@ -107,9 +124,17 @@ int main(int argc, char* argv[])
 
 		// std::thread t([&io_context]() { io_context.run(); });
 
-		client->call(
-			"foo", Json("[42, 23]"),
-			[](const std::string& res) { std::cout << "res=" << res << std::endl; });
+		client->call("foo", Json::parse(R"([42, 23])"), [](const Client::ResultType& res) {
+			std::cout << "res=" << res << std::endl;
+		});
+
+		// client->call("bar", Json::parse(R"("params")"), [](const Client::ResultType& res) {
+		// 	std::cout << "res=" << res << std::endl;
+		// });
+
+		// client->call("unknown method", Json(), [](const Client::ResultType& res) {
+		// 	std::cout << "res=" << res << std::endl;
+		// });
 
 		// net::async::ClientTransport transport(io_context);
 		// transport.connect(argv[1], atoi(argv[2]));
