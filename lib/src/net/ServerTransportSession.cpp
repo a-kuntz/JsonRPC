@@ -1,6 +1,7 @@
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/ServerTransportSession.h>
 
+#include <iostream>
 #include <memory>
 
 using boost::asio::ip::tcp;
@@ -17,44 +18,57 @@ ServerTransportSession::ServerTransportSession(tcp::socket socket, net::IDispatc
 
 void ServerTransportSession::start()
 {
-	do_read();
+	read();
 }
 
-void ServerTransportSession::do_read()
+void ServerTransportSession::read()
 {
 	auto self(shared_from_this());
 
-	_data = "";
+	_rx = "";
 
 	boost::asio::async_read(
-		_socket, boost::asio::dynamic_buffer(_data), boost::asio::transfer_at_least(1),
+		_socket, boost::asio::dynamic_buffer(_rx), boost::asio::transfer_at_least(1),
 		[this, self](boost::system::error_code ec, std::size_t /*length*/) {
 			if (!ec)
 			{
-				do_write();
+				// std::string s         = _rx;
+				// std::string delimiter = "}{";
+
+				// size_t      pos = 0;
+				// std::string token;
+				// while ((pos = s.find(delimiter)) != std::string::npos)
+				// {
+				// 	token = s.substr(0, pos+1);
+				// 	std::cout << token << std::endl;
+				// 	s.erase(0, pos + delimiter.length()-1);
+				// }
+				// std::cout << s << std::endl;
+
+				write(_dispatcher.dispatch(_rx));
 			}
 		});
 }
 
-void ServerTransportSession::do_write()
+void ServerTransportSession::write(const std::string& rpl)
 {
 	auto self(shared_from_this());
 
-	_data = _dispatcher.dispatch(_data);
+	_tx = rpl;
 
-	if (_data.length())
+	if (_tx.length())
 	{
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(_data), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
+			_socket, boost::asio::buffer(_tx), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					do_read();
+					read();
 				}
 			});
 	}
 	else
 	{
-		do_read();
+		read();
 	}
 }
 

@@ -23,8 +23,8 @@ class Client : public std::enable_shared_from_this<Client>
 private:
 	boost::asio::io_context& _ioc;
 	tcp::socket              _socket;
-	std::string              _data;
-	int                      _id;
+	std::string              _rx;
+	std::string              _tx;
 
 public:
 	using ResultType = Json;
@@ -44,22 +44,24 @@ public:
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
-		std::string req = Json(Request{"2.0", name, args, std::to_string(++_id)}).dump();
+		static int id = 0;
+
+		_tx = Json(Request{"2.0", name, args, std::to_string(++id)}).dump();
 
 		auto self(shared_from_this());
 
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(req),
-			[this, self, completion, req](boost::system::error_code ec, std::size_t length) {
+			_socket, boost::asio::buffer(_tx),
+			[this, self, completion](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
-					std::cout << fmt::format("{} <<< {}\n", util::ts(), req);
+					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), _tx, length);
 
 					receive(completion);
 				}
 				else
 				{
-					std::cerr << "error on call: " << req << " code: " << ec << " length: " << length << std::endl;
+					std::cerr << "error on call: " << _tx << " code: " << ec << " length: " << length << std::endl;
 				}
 			});
 	}
@@ -74,14 +76,14 @@ private:
 	{
 		auto self(shared_from_this());
 
-		_data = "";
+		_rx = "";
 
 		boost::asio::async_read(
-			_socket, boost::asio::dynamic_buffer(_data), boost::asio::transfer_at_least(1),
+			_socket, boost::asio::dynamic_buffer(_rx), boost::asio::transfer_at_least(1),
 			[this, self, completion](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					auto srsp = _data;
+					auto srsp = _rx;
 					std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
 
 					auto rsp = Response(Json::parse(srsp));
@@ -113,24 +115,28 @@ int main(int argc, char* argv[])
 
 		tcp::resolver resolver(io_context);
 		auto          endpoints = resolver.resolve(argv[1], argv[2]);
-		auto          client    = std::make_shared<Client>(io_context, endpoints);
 
 		// std::thread t([&io_context]() { io_context.run(); });
 
-		client->call("foo", Json::parse(R"([42, 23])"), [](const Client::ResultType& res) {
+		auto client_0 = std::make_shared<Client>(io_context, endpoints);
+		client_0->call("foo", Json::parse(R"([42, 23])"), [](const Client::ResultType& res) {
 			std::cout << fmt::format("res={}\n", res);
 		});
 
-		// client->call("bar", Json::parse(R"("params")"), [](const Client::ResultType& res) {
-		// std::cout << fmt::format("res={}\n", res);
-		// });
+		// todo: reuse socket
+		auto client_1 = std::make_shared<Client>(io_context, endpoints);
+		client_1->call("bar", Json::parse(R"("params")"), [](const Client::ResultType& res) {
+			std::cout << fmt::format("res={}\n", res);
+		});
 
-		// client->call("unknown method", Json(), [](const Client::ResultType& res) {
-		// std::cout << fmt::format("res={}\n", res);
-		// });
+		auto client_2 = std::make_shared<Client>(io_context, endpoints);
+		client_2->call(
+			"unknown method", Json(), [](const Client::ResultType& res) { std::cout << fmt::format("res={}\n", res); });
 
 		io_context.run();
-		client->close();
+		client_0->close();
+		client_1->close();
+		client_2->close();
 		// t.join();
 	}
 	catch (std::exception& e)
