@@ -1,5 +1,6 @@
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/ServerTransportSession.h>
+#include <jsonrpc/util/Util.h>
 
 #include <iostream>
 #include <memory>
@@ -32,20 +33,10 @@ void ServerTransportSession::read()
 		[this, self](boost::system::error_code ec, std::size_t /*length*/) {
 			if (!ec)
 			{
-				// std::string s         = _rx;
-				// std::string delimiter = "}{";
-
-				// size_t      pos = 0;
-				// std::string token;
-				// while ((pos = s.find(delimiter)) != std::string::npos)
-				// {
-				// 	token = s.substr(0, pos+1);
-				// 	std::cout << token << std::endl;
-				// 	s.erase(0, pos + delimiter.length()-1);
-				// }
-				// std::cout << s << std::endl;
-
-				write(_dispatcher.dispatch(_rx));
+				util::for_each_split(_rx, "}{", [this](const std::string& token) {
+					std::cout << token << std::endl;
+					write(_dispatcher.dispatch(token));
+				});
 			}
 		});
 }
