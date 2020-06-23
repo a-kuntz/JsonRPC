@@ -7,8 +7,6 @@
 #include <boost/asio.hpp>
 #include <fmt/format.h>
 
-#include <cstdlib>
-#include <cstring>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -68,19 +66,22 @@ private:
 			[this, self, completion](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					auto srsp = _buffer;
-					std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
+					// std::cout << _buffer << std::endl;
 
-					auto rsp = Response(Json::parse(srsp));
+					util::for_each_split(_buffer, "}{", [&](const std::string& srsp) {
+						std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
+						auto rsp = Response(Json::parse(srsp));
 
-					if (rsp.result)
-					{
-						completion(Json(*rsp.result));
-					}
-					else if (rsp.error)
-					{
-						completion(Json(*rsp.error));
-					}
+						// todo: dispatch correctly by id
+						if (rsp.result)
+						{
+							completion(Json(*rsp.result));
+						}
+						else if (rsp.error)
+						{
+							completion(Json(*rsp.error));
+						}
+					});
 				}
 			});
 	}
