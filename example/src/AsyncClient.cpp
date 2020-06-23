@@ -24,28 +24,14 @@ using Completion = std::function<void(const ResultType&)>;
 class Session : public std::enable_shared_from_this<Session>
 {
 private:
-	boost::asio::io_context& _ioc;
-	tcp::socket              _socket;
+	tcp::socket&              _socket;
 	std::string              _buffer;
 
 public:
 
-	Session(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
-		: _ioc(ioc)
-		, _socket(ioc)
-	{
-		boost::asio::async_connect(_socket, endpoints, [](boost::system::error_code ec, tcp::endpoint endpoint) {
-			if (ec)
-			{
-				std::cerr << "error on connect to " << endpoint << " : " << ec << std::endl;
-			}
-		});
-	}
-
-	~Session()
-    {
-	    close();
-    }
+	Session(boost::asio::io_context& ioc, tcp::socket& socket)
+		: _socket(socket)
+	{}
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
@@ -72,11 +58,6 @@ public:
 	}
 
 private:
-	void close()
-	{
-		boost::asio::post(_ioc, [this]() { _socket.close(); });
-	}
-
 	void receive(Completion completion)
 	{
 		auto self(shared_from_this());
@@ -110,17 +91,33 @@ class Client
 {
 private:
     boost::asio::io_context& _ioc;
-    const tcp::resolver::results_type& _endpoints;
+    tcp::socket              _socket;
 public:
     Client(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
     : _ioc(ioc)
-    , _endpoints(endpoints)
-    {}
+    , _socket(ioc)
+    {
+        boost::asio::async_connect(_socket, endpoints, [](boost::system::error_code ec, tcp::endpoint endpoint) {
+            if (ec)
+            {
+                std::cerr << "error on connect to " << endpoint << " : " << ec << std::endl;
+            }
+        });
+    }
+    ~Client()
+    {
+        close();
+    }
     void call(const std::string& name, const Json& args, Completion completion)
     {
-        auto session = std::make_shared<Session>(_ioc, _endpoints);
+        auto session = std::make_shared<Session>(_ioc, _socket);
         session->call(name, args, completion);
     }
+    void close()
+    {
+        boost::asio::post(_ioc, [this]() { _socket.close(); });
+    }
+
 };
 
 int main(int argc, char* argv[])
@@ -145,7 +142,6 @@ int main(int argc, char* argv[])
 			std::cout << fmt::format("res={}\n", res);
 		});
 
-		// todo: reuse socket
 		client.call("bar", Json::parse(R"("params")"), [](const ResultType& res) {
 			std::cout << fmt::format("res={}\n", res);
 		});
