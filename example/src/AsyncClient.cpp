@@ -18,72 +18,77 @@ using boost::asio::ip::tcp;
 using namespace jsonrpc;
 using namespace jsonrpc::rpc;
 
-class Client : public std::enable_shared_from_this<Client>
+using ResultType = Json;
+using Completion = std::function<void(const ResultType&)>;
+
+class Session : public std::enable_shared_from_this<Session>
 {
 private:
 	boost::asio::io_context& _ioc;
 	tcp::socket              _socket;
-	std::string              _rx;
-	std::string              _tx;
+	std::string              _buffer;
 
 public:
-	using ResultType = Json;
-	using Completion = std::function<void(const ResultType&)>;
 
-	Client(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
+	Session(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
 		: _ioc(ioc)
 		, _socket(ioc)
 	{
-		boost::asio::async_connect(_socket, endpoints, [this](boost::system::error_code ec, tcp::endpoint) {
+		boost::asio::async_connect(_socket, endpoints, [](boost::system::error_code ec, tcp::endpoint endpoint) {
 			if (ec)
 			{
-				std::cerr << "error on connect: " << ec << std::endl;
+				std::cerr << "error on connect to " << endpoint << " : " << ec << std::endl;
 			}
 		});
 	}
+
+	~Session()
+    {
+	    close();
+    }
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
 		static int id = 0;
 
-		_tx = Json(Request{"2.0", name, args, std::to_string(++id)}).dump();
+        _buffer = Json(Request{"2.0", name, args, std::to_string(++id)}).dump();
 
 		auto self(shared_from_this());
 
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(_tx),
+			_socket, boost::asio::buffer(_buffer),
 			[this, self, completion](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
-					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), _tx, length);
+					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), _buffer, length);
 
 					receive(completion);
 				}
 				else
 				{
-					std::cerr << "error on call: " << _tx << " code: " << ec << " length: " << length << std::endl;
+					std::cerr << "error on call: " << _buffer << " code: " << ec << " length: " << length << std::endl;
 				}
 			});
 	}
 
+private:
 	void close()
 	{
 		boost::asio::post(_ioc, [this]() { _socket.close(); });
 	}
 
-private:
 	void receive(Completion completion)
 	{
 		auto self(shared_from_this());
 
-		_rx = "";
+        _buffer = "";
 
 		boost::asio::async_read(
-			_socket, boost::asio::dynamic_buffer(_rx), boost::asio::transfer_at_least(1),
-			[this, self, completion](boost::system::error_code ec, std::size_t /*length*/) {
+                _socket, boost::asio::dynamic_buffer(_buffer), boost::asio::transfer_at_least(1),
+                [this, self, completion](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					auto srsp = _rx;
+					auto srsp = _buffer;
 					std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
 
 					auto rsp = Response(Json::parse(srsp));
@@ -99,6 +104,23 @@ private:
 				}
 			});
 	}
+};
+
+class Client
+{
+private:
+    boost::asio::io_context& _ioc;
+    const tcp::resolver::results_type& _endpoints;
+public:
+    Client(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
+    : _ioc(ioc)
+    , _endpoints(endpoints)
+    {}
+    void call(const std::string& name, const Json& args, Completion completion)
+    {
+        auto session = std::make_shared<Session>(_ioc, _endpoints);
+        session->call(name, args, completion);
+    }
 };
 
 int main(int argc, char* argv[])
@@ -118,25 +140,20 @@ int main(int argc, char* argv[])
 
 		// std::thread t([&io_context]() { io_context.run(); });
 
-		auto client_0 = std::make_shared<Client>(io_context, endpoints);
-		client_0->call("foo", Json::parse(R"([42, 23])"), [](const Client::ResultType& res) {
+		auto client = Client(io_context, endpoints);
+		client.call("foo", Json::parse(R"([42, 23])"), [](const ResultType& res) {
 			std::cout << fmt::format("res={}\n", res);
 		});
 
 		// todo: reuse socket
-		auto client_1 = std::make_shared<Client>(io_context, endpoints);
-		client_1->call("bar", Json::parse(R"("params")"), [](const Client::ResultType& res) {
+		client.call("bar", Json::parse(R"("params")"), [](const ResultType& res) {
 			std::cout << fmt::format("res={}\n", res);
 		});
 
-		auto client_2 = std::make_shared<Client>(io_context, endpoints);
-		client_2->call(
-			"unknown method", Json(), [](const Client::ResultType& res) { std::cout << fmt::format("res={}\n", res); });
+		client.call(
+			"unknown method", Json(), [](const ResultType& res) { std::cout << fmt::format("res={}\n", res); });
 
 		io_context.run();
-		client_0->close();
-		client_1->close();
-		client_2->close();
 		// t.join();
 	}
 	catch (std::exception& e)
