@@ -18,7 +18,6 @@ using namespace jsonrpc;
 using namespace jsonrpc::rpc;
 
 using ResponseType = std::variant<Json, Error>;
-//using ResponseType = Json;
 using Completion = std::function<void(const ResponseType&)>;
 using IdType     = Json;
 using Dispatcher = std::map<IdType, Completion>;
@@ -29,14 +28,14 @@ std::ostream& operator<<(std::ostream& out, const Completion& data)
 }
 
 template <typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& data) {
-    std::copy(std::begin(data), std::end(data), std::ostream_iterator<T>(out, "\n"));
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& data)
+{
+	std::copy(std::begin(data), std::end(data), std::ostream_iterator<T>(out, "\n"));
 }
 
 template <typename T, typename U>
 std::ostream& operator<<(std::ostream& out, const std::map<T, U>& data)
 {
-	//std::copy(std::begin(data), std::end(data), std::ostream_iterator<T>(out, "\n"));
 	std::for_each(std::begin(data), std::end(data), [&out](const std::pair<const T, U>& element) {
 		out << element.first << ":" << element.second << std::endl;
 	});
@@ -180,8 +179,8 @@ int main(int argc, char* argv[])
 
 		// std::thread t([&io_context]() { io_context.run(); });
 		auto ResponsePrinter = [](const ResponseType& rsp) {
-			std::string res = std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp))
-																 : std::get<Json>(rsp).dump();
+			std::string res =
+				std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp)) : std::get<Json>(rsp).dump();
 			std::cout << res << std::endl;
 		};
 

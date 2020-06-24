@@ -92,7 +92,7 @@ inline void from_json(const Json& json, Error& err)
 
 inline std::string to_string(const Error& e)
 {
-	return "Error"+Json(e).dump();
+	return "Error" + Json(e).dump();
 }
 
 } // namespace rpc
