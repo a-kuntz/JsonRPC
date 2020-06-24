@@ -18,9 +18,9 @@ using namespace jsonrpc;
 using namespace jsonrpc::rpc;
 
 using ResponseType = std::variant<Json, Error>;
-using Completion = std::function<void(const ResponseType&)>;
-using IdType     = Json;
-using Dispatcher = std::map<IdType, Completion>;
+using Completion   = std::function<void(const ResponseType&)>;
+using IdType       = Json;
+using Dispatcher   = std::map<IdType, Completion>;
 
 std::ostream& operator<<(std::ostream& out, const Completion& data)
 {
@@ -172,25 +172,28 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
-		boost::asio::io_context io_context;
+		boost::asio::io_context ioc;
 
-		tcp::resolver resolver(io_context);
-		auto          endpoints = resolver.resolve(argv[1], argv[2]);
+		auto resolver  = tcp::resolver(ioc);
+		auto endpoints = resolver.resolve(argv[1], argv[2]);
 
-		// std::thread t([&io_context]() { io_context.run(); });
-		auto ResponsePrinter = [](const ResponseType& rsp) {
+		//auto  guard = boost::asio::make_work_guard(ioc);
+		//std::thread t([&ioc]() { ioc.run(); });
+
+		auto ResponsePrinter = [&](const ResponseType& rsp) {
 			std::string res =
 				std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp)) : std::get<Json>(rsp).dump();
 			std::cout << res << std::endl;
+			//guard.reset();
 		};
 
-		auto client = Client(io_context, endpoints);
+		auto client = Client(ioc, endpoints);
 		client.call("foo", Json::parse(R"([42, 23])"), ResponsePrinter);
 		client.call("bar", Json::parse(R"("params")"), ResponsePrinter);
 		client.call("unknown method", Json(), ResponsePrinter);
 
-		io_context.run();
-		// t.join();
+		//t.join();
+		ioc.run();
 	}
 	catch (std::exception& e)
 	{
