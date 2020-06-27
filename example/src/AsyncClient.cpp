@@ -70,6 +70,15 @@ private:
 	std::map<IdType, Completion> _map;
 };
 
+namespace
+{
+IdType createUniqueId()
+{
+	static int id = 0;
+	return std::to_string(++id);
+}
+} // namespace
+
 class Session : public std::enable_shared_from_this<Session>
 {
 private:
@@ -87,9 +96,8 @@ public:
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
-		static int idVal = 0;
 
-		IdType id = std::to_string(++idVal);
+		IdType id = createUniqueId();
 
 		// todo:: schedule timeout
 
