@@ -95,19 +95,19 @@ public:
 
 		_buffer = Json(Request{"2.0", name, args, id}).dump();
 
-		auto self(shared_from_this());
-
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(_buffer), [this, self](boost::system::error_code ec, std::size_t length) {
+			_socket, boost::asio::buffer(_buffer),
+			[me = shared_from_this()](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
-					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), _buffer, length);
+					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), me->_buffer, length);
 
-					receive();
+					me->receive();
 				}
 				else
 				{
-					std::cerr << "error on call: " << _buffer << " code: " << ec << " length: " << length << std::endl;
+					std::cerr << "error on call: " << me->_buffer << " code: " << ec << " length: " << length
+							  << std::endl;
 				}
 			});
 
@@ -117,16 +117,14 @@ public:
 private:
 	void receive()
 	{
-		auto self(shared_from_this());
-
 		_buffer = "";
 
 		boost::asio::async_read(
 			_socket, boost::asio::dynamic_buffer(_buffer), boost::asio::transfer_at_least(1),
-			[this, self](boost::system::error_code ec, std::size_t /*length*/) {
+			[me = shared_from_this()](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
-					util::for_each_split(_buffer, "}{", [&](const std::string& srsp) {
+					util::for_each_split(me->_buffer, "}{", [&](const std::string& srsp) {
 						std::cout << fmt::format("{} >>> {}\n", util::ts(), srsp);
 
 						auto rsp = Response(Json::parse(srsp));
@@ -135,7 +133,7 @@ private:
 							throw std::runtime_error("invalid id: " + rsp.id.dump());
 						}
 
-						auto completion = _map.release(rsp.id);
+						auto completion = me->_map.release(rsp.id);
 
 						if (rsp.result)
 						{
@@ -146,9 +144,9 @@ private:
 							completion(*rsp.error);
 						}
 
-						if (_map.empty())
+						if (me->_map.empty())
 						{
-							close();
+							me->close();
 						}
 					});
 				}
@@ -156,8 +154,7 @@ private:
 	}
 	void close()
 	{
-		auto self(shared_from_this());
-		boost::asio::post(_ioc, [this, self]() { _socket.close(); });
+		boost::asio::post(_ioc, [me = shared_from_this()]() { me->_socket.close(); });
 	}
 };
 
