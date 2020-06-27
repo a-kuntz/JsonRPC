@@ -20,7 +20,6 @@ using namespace jsonrpc::rpc;
 using ResponseType = std::variant<Json, Error>;
 using Completion   = std::function<void(const ResponseType&)>;
 using IdType       = Json;
-using Dispatcher   = std::map<IdType, Completion>;
 
 std::ostream& operator<<(std::ostream& out, const Completion& data)
 {
@@ -42,18 +41,51 @@ std::ostream& operator<<(std::ostream& out, const std::map<T, U>& data)
 	return out;
 }
 
+class CompletionMap
+{
+public:
+	auto emplace(const IdType& id, const Completion& completion)
+	{
+		return _map.emplace(id, completion);
+	}
+	Completion release(const IdType& id)
+	{
+		auto it = _map.find(id);
+		if (it == _map.end())
+		{
+			throw std::runtime_error("invalid id: " + id.dump());
+		}
+
+		Completion cpl = it->second;
+
+		_map.erase(it);
+		return cpl;
+	}
+	bool empty()
+	{
+		return _map.empty();
+	}
+
+private:
+	std::map<IdType, Completion> _map;
+};
+
 class Session : public std::enable_shared_from_this<Session>
 {
 private:
-	tcp::socket& _socket;
-	std::string  _buffer;
+	boost::asio::io_context& _ioc;
+	tcp::socket&             _socket;
+	CompletionMap&           _map;
+	std::string              _buffer;
 
 public:
-	Session(boost::asio::io_context& ioc, tcp::socket& socket)
-		: _socket(socket)
+	Session(boost::asio::io_context& ioc, tcp::socket& socket, CompletionMap& map)
+		: _ioc(ioc)
+		, _socket(socket)
+		, _map(map)
 	{}
 
-	IdType call(const std::string& name, const Json& args, const Dispatcher& dispatcher)
+	void call(const std::string& name, const Json& args, Completion completion)
 	{
 		static int idVal = 0;
 
@@ -66,24 +98,24 @@ public:
 		auto self(shared_from_this());
 
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(_buffer),
-			[this, self, &dispatcher](boost::system::error_code ec, std::size_t length) {
+			_socket, boost::asio::buffer(_buffer), [this, self](boost::system::error_code ec, std::size_t length) {
 				if (!ec)
 				{
 					std::cout << fmt::format("{} <<< {} length={}\n", util::ts(), _buffer, length);
 
-					receive(dispatcher);
+					receive();
 				}
 				else
 				{
 					std::cerr << "error on call: " << _buffer << " code: " << ec << " length: " << length << std::endl;
 				}
 			});
-		return id;
+
+		_map.emplace(id, completion);
 	}
 
 private:
-	void receive(const Dispatcher& dispatcher)
+	void receive()
 	{
 		auto self(shared_from_this());
 
@@ -91,7 +123,7 @@ private:
 
 		boost::asio::async_read(
 			_socket, boost::asio::dynamic_buffer(_buffer), boost::asio::transfer_at_least(1),
-			[this, self, &dispatcher](boost::system::error_code ec, std::size_t /*length*/) {
+			[this, self](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
 					util::for_each_split(_buffer, "}{", [&](const std::string& srsp) {
@@ -103,12 +135,7 @@ private:
 							throw std::runtime_error("invalid id: " + rsp.id.dump());
 						}
 
-						auto it = dispatcher.find(rsp.id);
-						if (it == dispatcher.end())
-						{
-							throw std::runtime_error("invalid id: " + rsp.id.dump());
-						}
-						auto completion = it->second;
+						auto completion = _map.release(rsp.id);
 
 						if (rsp.result)
 						{
@@ -118,9 +145,19 @@ private:
 						{
 							completion(*rsp.error);
 						}
+
+						if (_map.empty())
+						{
+							close();
+						}
 					});
 				}
 			});
+	}
+	void close()
+	{
+		auto self(shared_from_this());
+		boost::asio::post(_ioc, [this, self]() { _socket.close(); });
 	}
 };
 
@@ -129,7 +166,7 @@ class Client
 private:
 	boost::asio::io_context& _ioc;
 	tcp::socket              _socket;
-	Dispatcher               _dispatcher;
+	CompletionMap            _map;
 
 public:
 	Client(boost::asio::io_context& ioc, const tcp::resolver::results_type& endpoints)
@@ -151,9 +188,8 @@ public:
 
 	void call(const std::string& name, const Json& args, Completion completion)
 	{
-		auto session = std::make_shared<Session>(_ioc, _socket);
-		auto id      = session->call(name, args, _dispatcher);
-		_dispatcher.emplace(id, completion);
+		auto session = std::make_shared<Session>(_ioc, _socket, _map);
+		session->call(name, args, completion);
 	}
 
 	void close()
@@ -177,14 +213,10 @@ int main(int argc, char* argv[])
 		auto resolver  = tcp::resolver(ioc);
 		auto endpoints = resolver.resolve(argv[1], argv[2]);
 
-		//auto  guard = boost::asio::make_work_guard(ioc);
-		//std::thread t([&ioc]() { ioc.run(); });
-
 		auto ResponsePrinter = [&](const ResponseType& rsp) {
 			std::string res =
 				std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp)) : std::get<Json>(rsp).dump();
 			std::cout << res << std::endl;
-			//guard.reset();
 		};
 
 		auto client = Client(ioc, endpoints);
@@ -192,7 +224,6 @@ int main(int argc, char* argv[])
 		client.call("bar", Json::parse(R"("params")"), ResponsePrinter);
 		client.call("unknown method", Json(), ResponsePrinter);
 
-		//t.join();
 		ioc.run();
 	}
 	catch (std::exception& e)
