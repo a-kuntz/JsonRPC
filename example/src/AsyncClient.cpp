@@ -151,12 +151,12 @@ private:
 						{
 							completion(*rsp.error);
 						}
-
-						if (me->_map.empty())
-						{
-							me->close();
-						}
 					});
+
+					if (me->_map.empty())
+					{
+						me->close();
+					}
 				}
 			});
 	}
