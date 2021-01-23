@@ -9,6 +9,7 @@
 
 #include <array>
 #include <chrono>
+#include <random>
 #include <string>
 #include <thread>
 
@@ -18,13 +19,14 @@ using namespace jsonrpc;
 class ClientServerTest : public ::testing::Test
 {
 protected:
-	boost::asio::io_context _ioc;
-	const int               _port = 55555;
-	rpc::Dispatcher         _dispatcher;
-	net::ServerTransport    _serverTransport;
-	net::ClientTransport    _clientTransport;
-	rpc::Client             _client;
-	std::thread             _thread;
+	boost::asio::io_context    _ioc;
+	static inline std::mt19937 _random_engine{std::random_device{}()};
+	static inline int          _port = std::uniform_int_distribution<int>{2000, 9000}(_random_engine);
+	rpc::Dispatcher            _dispatcher;
+	net::ServerTransport       _serverTransport;
+	net::ClientTransport       _clientTransport;
+	rpc::Client                _client;
+	std::thread                _thread;
 
 public:
 	ClientServerTest()
