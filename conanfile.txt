@@ -2,7 +2,7 @@
 
 [build_requires]
 nlohmann_json/3.9.1
-boost/1.73.0
+boost/1.75.0
 fmt/7.1.3
 gtest/1.10.0
 
