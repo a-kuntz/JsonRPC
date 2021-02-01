@@ -44,4 +44,4 @@ install:
 script:
   # - cmake -Bbuild -H.
   # - CTEST_OUTPUT_ON_FAILURE=1 make -C build all test
-  - ./scripts/build.sh
+  - ./build.sh
