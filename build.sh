@@ -8,5 +8,5 @@ mkdir -p ${BUILD}
 pushd ${BUILD}
 	cmake ..
 	cmake --build .
-	ctest
+	ctest --verbose
 popd
