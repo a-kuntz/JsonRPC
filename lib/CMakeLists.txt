@@ -2,7 +2,7 @@
 
 add_library(jsonrpc
 	src/net/ClientTransport.cpp
-	src/net/ServerTransportSession.cpp
+        src/net/ServerSession.cpp
 	src/net/ServerTransport.cpp
 	src/rpc/Client.cpp
 	src/rpc/Dispatcher.cpp

@@ -4,7 +4,7 @@
 - lib/include/jsonrpc/net/IDispatcher.h
 - lib/include/jsonrpc/net/ITransport.h
 - lib/include/jsonrpc/net/ServerTransport.h
-- lib/include/jsonrpc/net/ServerTransportSession.h
+- lib/include/jsonrpc/net/ServerSession.h
 
 ## class diagram
 
@@ -52,24 +52,24 @@ class jsonrpc::net::ServerTransport {
 }
 jsonrpc::net::ServerTransport *--> boost::asio::ip::tcp::acceptor
 jsonrpc::net::ServerTransport o--> jsonrpc::net::IDispatcher
-jsonrpc::net::ServerTransport -.-> jsonrpc::net::ServerTransportSession : <<usage>>
+jsonrpc::net::ServerTransport -.-> jsonrpc::net::ServerSession : <<usage>>
 
-class jsonrpc::net::ServerTransportSession {
+class jsonrpc::net::ServerSession {
   - boost::asio::ip::tcp::socket _socket
   - std::string _data
   - net::IDispatcher & _dispatcher
-  + ServerTransportSession (boost::asio::ip::tcp::socket socket, net::IDispatcher & dispatcher) -> void
+  + ServerSession (boost::asio::ip::tcp::socket socket, net::IDispatcher & dispatcher) -> void
   + start () -> void
   - do_read () -> void
   - do_write () -> void
-  + ServerTransportSession (const jsonrpc::net::ServerTransportSession & ) -> void
-  + ServerTransportSession (jsonrpc::net::ServerTransportSession && ) -> void
-  + operator= (const jsonrpc::net::ServerTransportSession & ) -> jsonrpc::net::ServerTransportSession &
-  + operator= (jsonrpc::net::ServerTransportSession && ) -> jsonrpc::net::ServerTransportSession &
-  + ~ServerTransportSession () -> void
+  + ServerSession (const jsonrpc::net::ServerSession & ) -> void
+  + ServerSession (jsonrpc::net::ServerSession && ) -> void
+  + operator= (const jsonrpc::net::ServerSession & ) -> jsonrpc::net::ServerSession &
+  + operator= (jsonrpc::net::ServerSession && ) -> jsonrpc::net::ServerSession &
+  + ~ServerSession () -> void
 }
-jsonrpc::net::ServerTransportSession *--> boost::asio::ip::tcp::socket
-jsonrpc::net::ServerTransportSession o--> jsonrpc::net::IDispatcher
+jsonrpc::net::ServerSession *--> boost::asio::ip::tcp::socket
+jsonrpc::net::ServerSession o--> jsonrpc::net::IDispatcher
 
 ```
 

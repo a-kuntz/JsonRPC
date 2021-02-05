@@ -1,5 +1,5 @@
 #include <jsonrpc/Config.h>
-#include <jsonrpc/net/ServerTransportSession.h>
+#include <jsonrpc/net/ServerSession.h>
 #include <jsonrpc/util/Util.h>
 
 #include <iostream>
@@ -12,17 +12,17 @@ namespace jsonrpc
 namespace net
 {
 
-ServerTransportSession::ServerTransportSession(tcp::socket socket, net::IDispatcher& dispatcher)
+ServerSession::ServerSession(tcp::socket socket, net::IDispatcher& dispatcher)
 	: _socket(std::move(socket))
 	, _dispatcher(dispatcher)
 {}
 
-void ServerTransportSession::start()
+void ServerSession::start()
 {
 	read();
 }
 
-void ServerTransportSession::read()
+void ServerSession::read()
 {
 	auto self(shared_from_this());
 
@@ -41,7 +41,7 @@ void ServerTransportSession::read()
 		});
 }
 
-void ServerTransportSession::write(const std::string& rpl)
+void ServerSession::write(const std::string& rpl)
 {
 	auto self(shared_from_this());
 
