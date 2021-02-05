@@ -17,8 +17,6 @@ class ServerTransportSession : public std::enable_shared_from_this<ServerTranspo
 {
 private:
 	boost::asio::ip::tcp::socket _socket;
-	std::string                  _rx;
-	std::string                  _tx;
 	net::IDispatcher&            _dispatcher;
 
 public:

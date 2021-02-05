@@ -26,14 +26,14 @@ void ServerTransportSession::read()
 {
 	auto self(shared_from_this());
 
-	_rx = "";
+	auto buffer = std::make_unique<std::string>();
 
 	boost::asio::async_read(
-		_socket, boost::asio::dynamic_buffer(_rx), boost::asio::transfer_at_least(1),
-		[this, self](boost::system::error_code ec, std::size_t /*length*/) {
+		_socket, boost::asio::dynamic_string_buffer(*buffer), boost::asio::transfer_at_least(1),
+		[this, self, buffer = std::move(buffer)](boost::system::error_code ec, std::size_t /*length*/) {
 			if (!ec)
 			{
-				util::for_each_split(_rx, "}{", [this](const std::string& token) {
+				util::for_each_split(*buffer, "}{", [this](const std::string& token) {
 					std::cout << token << std::endl;
 					write(_dispatcher.dispatch(token));
 				});
@@ -45,12 +45,10 @@ void ServerTransportSession::write(const std::string& rpl)
 {
 	auto self(shared_from_this());
 
-	_tx = rpl;
-
-	if (_tx.length())
+    if (rpl.length())
 	{
 		boost::asio::async_write(
-			_socket, boost::asio::buffer(_tx), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
+			_socket, boost::asio::const_buffer(rpl.data(), rpl.size()), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
 					read();
