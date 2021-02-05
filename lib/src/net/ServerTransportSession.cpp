@@ -45,10 +45,11 @@ void ServerTransportSession::write(const std::string& rpl)
 {
 	auto self(shared_from_this());
 
-    if (rpl.length())
+	if (rpl.length())
 	{
 		boost::asio::async_write(
-			_socket, boost::asio::const_buffer(rpl.data(), rpl.size()), [this, self](boost::system::error_code ec, std::size_t /*length*/) {
+			_socket, boost::asio::const_buffer(rpl.data(), rpl.size()),
+			[this, self](boost::system::error_code ec, std::size_t /*length*/) {
 				if (!ec)
 				{
 					read();

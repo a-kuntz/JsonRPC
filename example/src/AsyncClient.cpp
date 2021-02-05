@@ -48,6 +48,7 @@ public:
 	{
 		return _map.emplace(id, completion);
 	}
+
 	Completion release(const IdType& id)
 	{
 		auto it = _map.find(id);
@@ -61,6 +62,7 @@ public:
 		_map.erase(it);
 		return cpl;
 	}
+
 	bool empty()
 	{
 		return _map.empty();
@@ -160,6 +162,7 @@ private:
 				}
 			});
 	}
+
 	void close()
 	{
 		boost::asio::post(_ioc, [me = shared_from_this()]() { me->_socket.close(); });
@@ -219,9 +222,9 @@ int main(int argc, char* argv[])
 		auto endpoints = resolver.resolve(argv[1], argv[2]);
 
 		auto ResponsePrinter = [&](const ResponseType& rsp) {
-			std::string res =
-				std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp)) : std::get<Json>(rsp).dump();
-			std::cout << res << std::endl;
+			std::cout << std::string{std::holds_alternative<Error>(rsp) ? to_string(std::get<Error>(rsp))
+																		: std::get<Json>(rsp).dump()}
+					  << std::endl;
 		};
 
 		auto client = Client(ioc, endpoints);
