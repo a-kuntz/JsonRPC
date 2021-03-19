@@ -90,6 +90,11 @@ inline void from_json(const Json& json, Error& err)
 	err.data  = (data != json.end()) ? std::optional<Json>{*data} : std::optional<Json>{};
 }
 
+inline std::string to_string(const Error& e)
+{
+	return "Error" + Json(e).dump();
+}
+
 } // namespace rpc
 } // namespace jsonrpc
 

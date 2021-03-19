@@ -2,7 +2,7 @@
 
 add_library(jsonrpc
 	src/net/ClientTransport.cpp
-	src/net/ServerTransportSession.cpp
+        src/net/ServerSession.cpp
 	src/net/ServerTransport.cpp
 	src/rpc/Client.cpp
 	src/rpc/Dispatcher.cpp
@@ -13,7 +13,8 @@ target_compile_features(jsonrpc PUBLIC cxx_std_17)
 ##### target link libraries ###################################################
 
 target_link_libraries(jsonrpc PUBLIC nlohmann_json::nlohmann_json)
-target_link_libraries(jsonrpc PUBLIC Boost::Boost)
+target_link_libraries(jsonrpc PUBLIC Boost::boost)
+target_link_libraries(jsonrpc PUBLIC fmt::fmt)
 
 ##### generate and include config header ######################################
 

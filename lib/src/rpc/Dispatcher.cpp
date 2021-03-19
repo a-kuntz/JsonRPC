@@ -25,7 +25,7 @@ std::string Dispatcher::dispatch(const std::string& sreq)
 		jrsp = Json(Response{"2.0", {}, RPC_ERROR(ErrorCode::PARSE_ERROR, {}), {}});
 	}
 
-	const auto str_rsp = jrsp.is_null() || (jrsp.is_array() && jrsp.empty()) ? "" : jrsp.dump();
+	const auto str_rsp = (jrsp.is_null() || (jrsp.is_array() && jrsp.empty()) ? "" : jrsp.dump());
 	std::cout << util::ts() << " <-- " << str_rsp << std::endl;
 	return str_rsp;
 };

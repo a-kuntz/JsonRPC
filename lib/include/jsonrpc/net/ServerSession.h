@@ -13,21 +13,20 @@ namespace jsonrpc
 namespace net
 {
 
-class ServerTransportSession : public std::enable_shared_from_this<ServerTransportSession>
+class ServerSession : public std::enable_shared_from_this<ServerSession>
 {
 private:
 	boost::asio::ip::tcp::socket _socket;
-	std::string                  _data;
 	net::IDispatcher&            _dispatcher;
 
 public:
-	ServerTransportSession(boost::asio::ip::tcp::socket socket, net::IDispatcher& dispatcher);
+	ServerSession(boost::asio::ip::tcp::socket socket, net::IDispatcher& dispatcher);
 
 	void start();
 
 private:
-	void do_read();
-	void do_write();
+	void read();
+	void write(const std::string& rpl);
 };
 
 } // namespace net
