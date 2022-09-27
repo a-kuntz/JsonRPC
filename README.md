@@ -51,7 +51,29 @@ See [client example](example/src/Client.cpp)
 
 You can find plenty of usage examples in the test folder, in particular see [client server test](test/src/ClientServerTest.cpp).
 
-## Build
+## Setup your Machine
+
+To setup your Ubuntu 20.04 machine for building the library execute the following command
+
+```shell
+wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/bootstrap-ubuntu-20-04.sh | sh
+```
+
+## Clone and Build the Library
+
+Clone working copy
+
+```shell
+git clone https://github.com/a-kuntz/JsonRPC.git
+```
+
+To build the library and run all examples simply run `./build.sh` inside your working copy
+
+```shell
+cd JsonRPC
+./build.sh
+```
+
 
 See [`scripts/build.sh`](scripts/build.sh) or do
 
