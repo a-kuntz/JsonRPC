@@ -11,7 +11,7 @@ endif ()
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-conan_cmake_run(CONANFILE conanfile.txt
+conan_cmake_run(CONANFILE conanfile.py
         BASIC_SETUP CMAKE_TARGETS
         BUILD missing)
 

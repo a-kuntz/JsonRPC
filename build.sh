@@ -7,6 +7,6 @@ BUILD=build
 mkdir -p ${BUILD}
 pushd ${BUILD}
 	cmake ..
-	cmake --build .
+	cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug .
 	ctest --verbose
 popd
