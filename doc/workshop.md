@@ -55,3 +55,5 @@ Am Ende der Entwicklung des neuen Features werden die Ergebnise präsentiert. Da
 4. Detailgrad der Aufgabenstellung (Requirementsdokument)
 5. Cheat Sheet C++/JSON/CMake
 6. Confluence Seite?
+
+=> beide Teams sollen am ende von ihrem Programmteil etwas zurückbekommen (setData -> Picture; settings -> ???)
