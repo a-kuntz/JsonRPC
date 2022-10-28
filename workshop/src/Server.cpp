@@ -1,6 +1,6 @@
 #include <jsonrpc/net/ServerTransport.h>
 #include <jsonrpc/rpc/Dispatcher.h>
-#include <workshop/setdata/setData.cpp>
+#include "workshop/x_ray_tube/x_ray_tube.h"
 
 #include <boost/asio.hpp>
 
@@ -23,9 +23,10 @@ int main(int argc, char* argv[])
 		boost::asio::io_context io_context;
 
 		rpc::Dispatcher dsp;
-		dsp.add<setData::BodyPart>("setBodyPart");
-		dsp.add<setData::PatientData>("setPatientData");
-		dsp.add<setData::Intensity>("setIntensity");
+		dsp.add<XRayTube::setTubeVoltage>("setTubeVoltage");
+		dsp.add<XRayTube::setTubeCurrent>("setTubeCurrent");
+		dsp.add<XRayTube::getStatus>("getStatus");
+		dsp.add<XRayTube::takePicture>("takePicture");
 
 		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 

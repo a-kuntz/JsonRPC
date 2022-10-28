@@ -103,7 +103,7 @@ After you have implemented all features the server should look like this:
 
 ```puml
 @startuml
-title "Compleet Server:"
+title "Complete Server:"
 class Server{
     + {static} int ServerID
     +getCamera(): *Camera

@@ -22,8 +22,8 @@ Currently the system supports one class with four functions. The functions `take
 @startuml
 title "Server:"
 class XRayTube{
-    +double current
-    +double voltage
+    -double current
+    -double voltage
     +takePicture(): char[]
     +setTubeCurrent(double current): bool
     +setTubeVoltage(double voltage): bool
@@ -48,36 +48,35 @@ After the bug is fixed, your task will be to implement the following features:
     * This interface function passes the value to the Actor
     * If the actor returns false you have to handel the failure
     * ?You have to implement an enum which represents the Body_Parts?
-1. `setPatientData(std::string name, int age, int id)`
+2. `setPatientData(std::string name, int age, int id)`
     * Sets the patient data
     * The parameters have to be set to the datafield
-1. `adjustBeam(flost x, float y)`
+3. `adjustBeam(flost x, float y)`
     * Adjusts the beam
     * The parameters have to be passed to The Actor
     * If the Actor returns false you have to handel the failure
-1.  `getStatus(): std::string`
+4. `XRayScan::getStatus(): std::string`
     * Returns the status of the set parameters
     * The information about the Patient, the Bodypart and the beam should be collected and    returned
-1.  `getDosage(): std::float`
+5. `getDosage(): std::float`
     * Returns the dosage emitted to the patient
-    * The dosage is calculated by the following formula: dos=(current + voltage)/age
-1.  `setExaminer(int id)`
+    * The dosage is calculated by the following formula: dos=(current + voltage)/2
+6. `setExaminer(int id)`
     * Sets the ID of the performing Examiner
     * The parameter have to be set to the datafield
-1.  `setAnomalies(std:: string)`
+7. `setAnomalies(std:: string)`
     * Sets the complications occured during the exam
     * The parameter have to be set to the datafield
-1. `setDate(DateTime date)`
+8. `setDate(DateTime date)`
     * Sets the date
     * The parameter have to be set to the datafield
-1. `setTime(Time time)`
+    * ?You have to implement a struct which represents the DateTime?
+9. `setTime(Time time)`
     * Sets the time
-    * The parameter have to be set to the datafield
-1. `getServerID()`
-    * Returns the Id of the instance of the server
-1. `getSystemStatus()`
+    * ?You have to implement a struct which represents the Time?
+10. `getSystemStatus(): std::string`
     * Returns the System status
-    * The information about the status are collected form the X-Ray tube and the Actor
+    * The information about the time, date and serverId should be collected and returned
 
 TODO: Add more features
 TODO: Specify the features
@@ -89,32 +88,33 @@ After you have implemented all features the server should look like this:
 @startuml
 title "Complete Server:"
 class XRayScan{
-    +std::string name
-    +int age
-    +int id
+    -std::string name
+    -int age
+    -int id
     +setBodyPart(BodyPart bpart)
     +setPatientData(std::string name, int age, int id)
     +adjustBeam(float x, float y)
-    +getStatus(): std::string
-    +getDosage(): std::float
-    }
+    +getStatus(): std::string 
+}
 class XRayTube{
-    +double voltage
-    +double current
+    -double voltage
+    -double current
     +takePicture(): char[]
     +setTubeCurrent(double current): bool
     +setTubeVoltage(double voltage): bool
     +getStatus(): std::string
+    +getDosage(): std::float
 }
 class Actor{
-    +int examinerId
-    +std::string anomalies
+    -int examinerId
+    -std::string anomalies
     +setExaminer(int id)
     +setAnomalies(std:string)
 }
 class Settings{
-    +DateTime date
-    +Time time
+    + {static} int ServerID
+    -DateTime date
+    -Time time
     +setDate(DateTime date)
     +setTime(Time time)
     +getSystemStatus(): std::string
@@ -123,7 +123,7 @@ class Settings{
 @enduml
 ```
 
-For the next iteration, the server should get an interface, which will be called instead of the function. 
+For the next iteration, the server should get an interface, which will be called instead of the function. The operator of the client should call the interface function for the desired operation and the interface function will handle the data distribution to the base functions.
 After reworking, the server should look like this.
 
 ```puml
@@ -131,40 +131,40 @@ After reworking, the server should look like this.
 title "Complete Server:"
 class Server{
     + {static} int ServerID
-    +getCamera(): *Camera
+    +getScan(): *XRayScan
+    +getTube(): *XRayTube
     +getActor(): *Actor
     +getSettings(): *Settings
 }
 class XRayScan{
-    +std::string name
-    +int age
-    +int id
+    -std::string name
+    -int age
+    -int id
     +setBodyPart(BodyPart bpart)
     +setPatientData(std::string name, int age, int id)
     +adjustBeam(float x, float y)
     +getStatus(): std::string
-    +getDosage(): std::float
     }
 class XRayTube{
-    +double voltage
-    +double current
+    -double voltage
+    -double current
     +takePicture(): char[]
     +setTubeCurrent(double current): bool
     +setTubeVoltage(double voltage): bool
-    +getStatus(): std::string
+    +getStatus(): std::string    
+    +getDosage(): std::float
 }
 class Actor{
-    +int examinerId
-    +std::string anomalies
+    -int examinerId
+    -std::string anomalies
     +setExaminer(int id)
     +setAnomalies(std:string)
 }
 class Settings{
-    +DateTime date
-    +Time time
+    -DateTime date
+    -Time time
     +setDate(DateTime date)
     +setTime(Time time)
-    +getServerID(): int
     +getSystemStatus(): std::string
 }
 Server *-- "1" XRayTube
