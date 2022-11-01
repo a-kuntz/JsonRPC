@@ -10,6 +10,8 @@ add_library(jsonrpc
 
 target_compile_features(jsonrpc PUBLIC cxx_std_17)
 
+set_target_properties(jsonrpc PROPERTIES OUTPUT_NAME jsonrpc$<$<CONFIG:Debug>:d>)
+
 ##### target link libraries ###################################################
 
 target_link_libraries(jsonrpc PUBLIC nlohmann_json::nlohmann_json)
@@ -23,3 +25,6 @@ target_include_directories(jsonrpc BEFORE PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/inc
 ##### target includes #########################################################
 
 target_include_directories(jsonrpc PUBLIC include)
+
+
+# ToDo: add commands to install the library and the package config file
