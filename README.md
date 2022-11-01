@@ -2,7 +2,46 @@
 
 Modern C++ [JSON RPC 2.0](https://www.jsonrpc.org/specification) library
 
-## Usage
+## Setup
+
+### Install development tools
+
+On an Ubuntu 20.04, to setup your machine for building the library, execute the following command:
+
+```shell
+wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/bootstrap-ubuntu-20-04.sh | sh
+```
+
+### Clone the repo
+
+```shell
+git clone https://github.com/a-kuntz/JsonRPC.git
+cd JsonRPC
+```
+
+## Build the library
+
+This library directly depends on the following libraries:
+
+- [boost](https://www.boost.org) version 1.73.0
+- [nlohmann_json](https://github.com/nlohmann/json) vesion 3.7.3
+- [gtest](https://github.com/google/googletest) version 1.10.0 (for testing purposes only)
+
+The repository includes a conafile to install the dependencies. To build the library, type:
+
+```shell
+conan install . --install-folder=build -pr:b=default -s build_type=Debug
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+```
+
+To build the tests and the example, add the following options to the cmake configuration command:
+
+```shell
+-DBUILD_TESTS=ON -DBUILD_EXAMPLE=ON
+```
+
+## Use the library
 
 ### Server
 
@@ -49,59 +88,13 @@ See [client example](example/src/Client.cpp)
 
 ### Examples
 
-You can find plenty of usage examples in the test folder, in particular see [client server test](test/src/ClientServerTest.cpp).
-
-## Setup your Machine
-
-To setup your Ubuntu 20.04 machine for building the library execute the following command
-
-```shell
-wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/bootstrap-ubuntu-20-04.sh | sh
-```
-
-## Clone and Build the Library
-
-Clone working copy
-
-```shell
-git clone https://github.com/a-kuntz/JsonRPC.git
-```
-
-To build the library and run all examples simply run `./build.sh` inside your working copy
-
-```shell
-cd JsonRPC
-./build.sh
-```
+You can find additional usage examples in the test folder, in particular see [client server test](test/src/ClientServerTest.cpp).
 
 
-See [`scripts/build.sh`](scripts/build.sh) or do
-
-```shell
-mkdir build; cd build
-conan install ..
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_paths.cmake
-make all test
-```
-
-### Dependencies
-
-The following dependencies are handled by `conan`, see [`conanfile.txt`](conanfile.txt):
-
-- [gtest](https://github.com/google/googletest) version 1.10.0
-- [nlohmann_json](https://github.com/nlohmann/json) vesion 3.7.3
-- [boost](https://www.boost.org) version 1.73.0
-<!-- - [fmt](https://github.com/fmtlib/fmt) version 6.2.0 -->
-
-``` shell
-cd build
-conan install ..
-```
-
-### Toolchain
+## Toolchain
 
 | tool      | requirement    |
 | --------- | -------------- |
 | g++/clang | c++17          |
-| cmake     | version 3.12   |
-| conan     | version 1.25.1 |
+| cmake     | version 3.16   |
+| conan     | version 1.53   |
