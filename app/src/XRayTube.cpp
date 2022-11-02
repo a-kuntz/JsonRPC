@@ -5,6 +5,8 @@
 
 using namespace jsonrpc;
 
+namespace xray{
+
 struct XRayTube::setTubeVoltage
 {
   rpc ::Json call(const rpc::Json& data) override
@@ -70,4 +72,5 @@ struct XRayTube::takePicture
   {
     return "Picture taken."
   }
+}
 }
