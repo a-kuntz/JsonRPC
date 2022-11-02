@@ -4,7 +4,6 @@
 
 The X-Ray system is built out of two parts. The user interacts with a client software, which is installed on a terminal. The X-Ray is connected to a server, which provides the interface for communicating with the client. This comunication uses the JsonRPC protocol.
 
-<div hidden>
 ```plantuml
 @startuml firstServer
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
@@ -16,8 +15,6 @@ BiRel_R(server, client, "Comunicate", "JSON")
 BiRel_R(client, user, "interacts")
 @enduml
 ```
-</div>
-![](firstServer.svg)
 
 Currently the system supports one class with four functions. The functions `takePicture`, `setVoltage`, `getStatus` and the function `setIntensity`. The first 3 functions work just fine. Unfortunately, the tests for the function `setIntensity` fails. The following class diagram shows the current structure of the server:
 
