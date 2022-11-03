@@ -93,8 +93,8 @@ JsonRPC directly depends on the following libraries, which are handled through c
 
 - [boost](https://www.boost.org) version 1.75.0
 - [fmt](https://github.com/fmtlib/fmt) version 7.1.3
-- [nlohmann_json](https://github.com/nlohmann/json) vesion 3.9.1
 - [gtest](https://github.com/google/googletest) version 1.11.0 (for testing purposes only)
+- [nlohmann_json](https://github.com/nlohmann/json) vesion 3.9.1
 
 | tool      | requirement    |
 | --------- | -------------- |
