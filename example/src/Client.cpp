@@ -29,6 +29,8 @@ int main(int argc, char* argv[])
 		client.call("foo", {"arg1", "arg2", "arg3"});
 		client.call("bar", "params");
 		client.call("unknown method", {});
+		client.call("set-value", 42);
+		client.call("get-value", {});
 	}
 	catch (std::exception& e)
 	{

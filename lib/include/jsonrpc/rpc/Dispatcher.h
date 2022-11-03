@@ -21,10 +21,10 @@ private:
 	Registry _registry;
 
 public:
-	template <class METHOD>
-	void add(const std::string& name)
+	template <class METHOD, class... ARGS>
+	void add(const std::string& name, ARGS... args)
 	{
-		_registry.emplace(name, std::make_unique<METHOD>());
+		_registry.emplace(name, std::make_unique<METHOD>(args...));
 	};
 
 	std::string dispatch(const std::string& sreq) override;
