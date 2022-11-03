@@ -1,7 +1,8 @@
 #ifndef HEADER_686434B8_92F9_11EA_8656_784F43782D09
 #define HEADER_686434B8_92F9_11EA_8656_784F43782D09
 
-namespace jsonrpc {
+namespace jsonrpc
+{
 
 }
 
