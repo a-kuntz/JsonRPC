@@ -53,6 +53,8 @@ int main(int argc, char* argv[])
 		// dsp.add<xray::XRayTube::setTubeCurrent("setCurrent");
 		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 
+		std::cerr << argv[0] << " listening on port " << argv[1] << "\n";
+
 		io_context.run();
 	}
 	catch (std::exception& e)
