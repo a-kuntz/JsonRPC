@@ -84,6 +84,7 @@ or build manually
 conan install . --install-folder=build -pr:b=default -s build_type=Debug --build=missing
 cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
+cmake --build build --target test
 ```
 
 ### Dependencies
