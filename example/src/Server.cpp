@@ -27,24 +27,30 @@ struct Bar : public rpc::IMethod
 
 struct SetValue : public rpc::IMethod
 {
-	SetValue(double& value) : _value(value) {}
+	SetValue(double& value)
+		: _value(value)
+	{}
 	rpc::Json call(const rpc::Json& data) override
 	{
 		_value = data;
 		return {};
 	}
-	private:
+
+private:
 	double& _value;
 };
 
 struct GetValue : public rpc::IMethod
 {
-	GetValue(double& value) : _value(value) {}
+	GetValue(double& value)
+		: _value(value)
+	{}
 	rpc::Json call(const rpc::Json& data) override
 	{
 		return _value;
 	}
-	private:
+
+private:
 	double& _value;
 };
 
@@ -59,7 +65,7 @@ int main(int argc, char* argv[])
 		}
 
 		boost::asio::io_context io_context;
-		double value = 0;
+		double                  value = 0;
 
 		rpc::Dispatcher dsp;
 		dsp.add<Foo>("foo");
