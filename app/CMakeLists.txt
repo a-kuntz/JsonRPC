@@ -12,7 +12,7 @@ target_link_libraries(x-ray-client PRIVATE Boost::Boost)
 
 add_executable(x-ray-server
 	src/Server.cpp
-	src/XRayTube.cpp
+	# src/XRayTube.cpp
 )
 target_compile_features(x-ray-server PRIVATE cxx_std_17)
 

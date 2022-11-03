@@ -1,4 +1,4 @@
-#include "XRayTube.h"
+// #include "XRayTube.h"
 
 #include <jsonrpc/net/ServerTransport.h>
 #include <jsonrpc/rpc/Dispatcher.h>
@@ -9,24 +9,29 @@
 #include <exception>
 #include <iostream>
 
-
-
 using namespace jsonrpc;
 
-struct Foo : public rpc::IMethod
+struct SetValue : public rpc::IMethod
 {
+	SetValue(double& value) : _value(value) {}
 	rpc::Json call(const rpc::Json& data) override
 	{
-		return "foo called";
+		_value = data;
+		return {};
 	}
+	private:
+	double& _value;
 };
 
-struct Bar : public rpc::IMethod
+struct GetValue : public rpc::IMethod
 {
+	GetValue(double& value) : _value(value) {}
 	rpc::Json call(const rpc::Json& data) override
 	{
-		return "bar called";
+		return _value;
 	}
+	private:
+	double& _value;
 };
 
 int main(int argc, char* argv[])
@@ -35,16 +40,17 @@ int main(int argc, char* argv[])
 	{
 		if (argc != 2)
 		{
-			std::cerr << "Usage: async_tcp_echo_server <port>\n";
+			std::cerr << "Usage: " << argv[0] << " <port>\n";
 			return 1;
 		}
 
 		boost::asio::io_context io_context;
+		double value = 0;
 
 		rpc::Dispatcher dsp;
-		dsp.add<Foo>("foo");
-		dsp.add<Bar>("bar");
-		dsp.add<xray::XRayTube::setTubeCurrent("setCurrent");
+		dsp.add<SetValue>("set-value", value);
+		dsp.add<GetValue>("get-value", value);
+		// dsp.add<xray::XRayTube::setTubeCurrent("setCurrent");
 		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 
 		io_context.run();

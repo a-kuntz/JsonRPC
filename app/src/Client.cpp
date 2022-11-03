@@ -26,8 +26,10 @@ int main(int argc, char* argv[])
 		transport.connect(argv[1], atoi(argv[2]));
 
 		auto client = rpc::Client(transport);
-		client.call("foo", {"arg1", "arg2", "arg3"});
-		client.call("bar", "params");
+		client.call("set-value", 42);
+		client.call("get-value", {});
+		client.call("set-value", 1024);
+		client.call("get-value", {});
 		client.call("unknown method", {});
 	}
 	catch (std::exception& e)
