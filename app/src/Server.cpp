@@ -11,29 +11,6 @@
 
 using namespace jsonrpc;
 
-struct SetValue : public rpc::IMethod
-{
-	SetValue(double& value) : _value(value) {}
-	rpc::Json call(const rpc::Json& data) override
-	{
-		_value = data;
-		return {};
-	}
-	private:
-	double& _value;
-};
-
-struct GetValue : public rpc::IMethod
-{
-	GetValue(double& value) : _value(value) {}
-	rpc::Json call(const rpc::Json& data) override
-	{
-		return _value;
-	}
-	private:
-	double& _value;
-};
-
 int main(int argc, char* argv[])
 {
 	try
@@ -45,13 +22,8 @@ int main(int argc, char* argv[])
 		}
 
 		boost::asio::io_context io_context;
-		double value = 0;
 
-		rpc::Dispatcher dsp;
-		dsp.add<SetValue>("set-value", value);
-		dsp.add<GetValue>("get-value", value);
-		// dsp.add<xray::XRayTube::setTubeCurrent("setCurrent");
-		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
+		xray::Server server(io_context, std::atoi(argv[1]));
 
 		std::cerr << argv[0] << " listening on port " << argv[1] << "\n";
 

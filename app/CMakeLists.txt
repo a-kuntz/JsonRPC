@@ -1,3 +1,9 @@
+##### libxray #################################################################
+
+add_library(xray
+	src/XRayServer.cpp
+)
+
 ##### client ##################################################################
 
 add_executable(x-ray-client
@@ -12,9 +18,9 @@ target_link_libraries(x-ray-client PRIVATE Boost::Boost)
 
 add_executable(x-ray-server
 	src/Server.cpp
-	# src/XRayTube.cpp
 )
 target_compile_features(x-ray-server PRIVATE cxx_std_17)
 
+target_link_libraries(x-ray-server PRIVATE xray)
 target_link_libraries(x-ray-server PRIVATE jsonrpc)
 target_link_libraries(x-ray-server PRIVATE Boost::Boost)
