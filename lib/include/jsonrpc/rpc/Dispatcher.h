@@ -22,7 +22,7 @@ private:
 
 public:
 	template <class METHOD, class... ARGS>
-	void add(const std::string& name, ARGS... args)
+	void add(const std::string& name, ARGS&... args)
 	{
 		_registry.emplace(name, std::make_unique<METHOD>(args...));
 	};
