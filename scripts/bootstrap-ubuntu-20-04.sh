@@ -4,6 +4,7 @@ sudo apt update
 
 sudo apt install -y \
 	ccache \
+	clang-format-9 \
 	cmake \
 	cmake-curses-gui \
 	git \
