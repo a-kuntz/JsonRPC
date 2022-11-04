@@ -30,6 +30,11 @@ int main(int argc, char* argv[])
 		client.call("get-value", {});
 		client.call("set-value", 1024.0);
 		client.call("get-value", {});
+		client.call("setTubeVoltage", 42.0);
+		client.call("setTubeCurrent", 42.0);
+		client.call("getStatus", {},{});
+		client.call("takePicture", {};
+		
 		client.call("unknown method", {});
 	}
 	catch (std::exception& e)
