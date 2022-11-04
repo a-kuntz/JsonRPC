@@ -40,7 +40,6 @@ struct xray::setTubeVoltage
 {
 	rpc::Json call(const rpc::Json& data) override
 	{
-		//TODO: error handling (check if Voltage is in range)
 		if (data.is_array())
 		{
 			std::array<double, 1> par = data;
@@ -58,7 +57,6 @@ struct xray::setTubeCurrent
 {
 	rpc ::Json call(const rpc::Json& data) override
 	{
-		//TODO: error handling (check if Current is in range)
 		if (data.is_array())
 		{
 			std::array<double, 1> par = data;
