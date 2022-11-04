@@ -1,6 +1,5 @@
 #include "XRayServer.h"
 
-
 #include <jsonrpc/net/ServerTransport.h>
 #include <jsonrpc/rpc/Dispatcher.h>
 
@@ -24,7 +23,7 @@ int main(int argc, char* argv[])
 
 		boost::asio::io_context io_context;
 
-		xray::Server server(io_context, std::atoi(argv[1]));
+		//xray::Server server(io_context, std::atoi(argv[1]));
 
 		std::cerr << argv[0] << " listening on port " << argv[1] << "\n";
 
