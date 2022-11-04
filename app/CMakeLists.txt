@@ -6,21 +6,21 @@ add_library(xray
 
 ##### client ##################################################################
 
-add_executable(x-ray-client
+add_executable(xrayclient
 	src/Client.cpp
 )
-target_compile_features(x-ray-client PRIVATE cxx_std_17)
+target_compile_features(xrayclient PRIVATE cxx_std_17)
 
-target_link_libraries(x-ray-client PRIVATE jsonrpc)
-target_link_libraries(x-ray-client PRIVATE Boost::Boost)
+target_link_libraries(xrayclient PRIVATE jsonrpc)
+target_link_libraries(xrayclient PRIVATE Boost::Boost)
 
 ##### server ##################################################################
 
-add_executable(x-ray-server
+add_executable(xrayserver
 	src/Server.cpp
 )
-target_compile_features(x-ray-server PRIVATE cxx_std_17)
+target_compile_features(xrayserver PRIVATE cxx_std_17)
 
-target_link_libraries(x-ray-server PRIVATE xray)
-target_link_libraries(x-ray-server PRIVATE jsonrpc)
-target_link_libraries(x-ray-server PRIVATE Boost::Boost)
+target_link_libraries(xrayserver PRIVATE xray)
+target_link_libraries(xrayserver PRIVATE jsonrpc)
+target_link_libraries(xrayserver PRIVATE Boost::Boost)

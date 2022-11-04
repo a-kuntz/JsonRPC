@@ -1,7 +1,7 @@
 #include "XRayServer.h"
 
 #include <jsonrpc/net/ServerTransport.h>
-#include <jsonrpc/rpc/Dispatcher.h
+#include <jsonrpc/rpc/Dispatcher.h>
 
 #include <string>
 
@@ -26,90 +26,102 @@ private:
 
 struct xray::SetValue
 {
-	SetValue(double& value) : _value(value) {}
+	SetValue(double& value)
+		: _value(value)
+	{}
 	rpc::Json call(const rpc::Json& data) override
 	{
 		_value = data;
 		return {};
 	}
-	private:
+
+private:
 	double& _value;
 };
 
 struct xray::setTubeVoltage
 {
+	setTubeVoltage(double& voltage)
+		: _voltage(voltage)
+	{}
 	rpc::Json call(const rpc::Json& data) override
 	{
-		if (data.is_array())
-		{
-			std::array<double, 1> par = data;
-			voltage                   = par[0];
-		}
-		else if (data.is_object())
-		{
-			voltage = data.at("voltage");
-		}
-		return "Tube Voltage has been set to" + voltage;
+		_voltage = data;
+		return "Tube Voltage has been set to" + _voltage;
 	}
+
+private:
+	double& _voltage;
 }
 
 struct xray::setTubeCurrent
 {
+	setTubeCurrent(double& current)
+		: _current(current)
+	{}
 	rpc ::Json call(const rpc::Json& data) override
 	{
-		if (data.is_array())
-		{
-			std::array<double, 1> par = data;
-			current                   = par[0];
-		}
-		else if (data.is_object())
-		{
-			current = data.at("current");
-		}
-		return "Tube Current has been set to" + current;
+		_current = data;
+		return "Tube Current has been set to" + _current;
 	}
+
+private:
+	double& _current;
 }
 
 struct xray::getStatus
 {
+	getStatus(double& voltage, double& current)
+		: _voltage(voltage)
+		, _current(current)
+	{}
 	rpc ::Json call(const rpc::Json& data) override
 	{
-		if (voltage == NULL)
+		if (_voltage == NULL || _current == NULL)
 		{
-			return "Tube Voltage is not set."
-		}
-		else if (current == NULL)
-		{
-			return "Tube Current is not set."
-		}
-		else if (voltage == NULL && current == NULL)
-		{
-			return "Tube Current and Tube Voltage are not set."
+			return "Tube Current or Tube Voltage are not set."
 		}
 		else
 		{
-			return "Current settings are: Tube Voltage = " + voltage + " Tube Current = " + current;
+			return "Current settings are: Tube Voltage = " + _voltage + " Tube Current = " + _current;
 		}
 	}
+
+private:
+	double& _voltage;
+	double& _current;
 }
 
 struct xray::takePicture
 {
+	takePicture(double& value)
+		: _value(value)
+	{}
 	rpc ::Json call(const rpc::Json& data) override
 	{
 		return "Picture taken."
 	}
+
+private:
+	double& _value;
 }
 
 struct xray::Status
 {
 	double value;
+	double voltage;
+	double current;
 }
 
 xray::Server::Server(io_context&..., port)
 {
 	dsp.add<SetValue>("set-value", status.value);
 	dsp.add<GetValue>("get-value", status.value);
+	dsp.add<setTubeVoltage>("setTubeVoltage", status.voltage);
+	dsp.add<setTubeCurrent>("setTubeCurrent", status.current);
+	dsp.add<getStatus>("getStaus", status.voltage, status.current);
+	dsp.add<takePicture>("takePicture", status.value);
+	net::ServerTransport st(io_context, port, dsp);
 }
 
 } // namespace xray

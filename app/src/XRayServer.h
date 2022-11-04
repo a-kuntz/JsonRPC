@@ -2,7 +2,6 @@
 #define X_RAY_SERVER_H
 
 #include <jsonrpc/rpc/Dispatcher.h>
-#include <jsonrpc/rpc/IMethod.h>
 
 #include <iostream>
 
