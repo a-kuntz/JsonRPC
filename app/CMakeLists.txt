@@ -3,7 +3,7 @@
 add_library(xray
 	src/XRayServer.cpp
 )
-
+target_link_libraries(xray PRIVATE jsonrpc)
 ##### client ##################################################################
 
 add_executable(xrayclient
