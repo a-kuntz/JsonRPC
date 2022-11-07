@@ -6,7 +6,7 @@ add_executable(client
 target_compile_features(client PRIVATE cxx_std_17)
 
 target_link_libraries(client PRIVATE jsonrpc)
-target_link_libraries(client PRIVATE Boost::Boost)
+target_link_libraries(client PRIVATE Boost::boost pthread)
 
 ##### server ##################################################################
 
@@ -16,4 +16,4 @@ add_executable(server
 target_compile_features(server PRIVATE cxx_std_17)
 
 target_link_libraries(server PRIVATE jsonrpc)
-target_link_libraries(server PRIVATE Boost::Boost)
+target_link_libraries(server PRIVATE Boost::boost pthread)
