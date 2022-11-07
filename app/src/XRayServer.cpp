@@ -68,13 +68,13 @@ rpc ::Json xray::takePicture::call(const rpc::Json& data) //override
 	return "Picture taken.";
 }
 
-// xray::Server::Server(boost::asio::io_context& io_context, int port)
-// {
-// 	dsp.add<setValue>("set-value", status.value);
-// 	dsp.add<getValue>("get-value", status.value);
-// 	dsp.add<setTubeVoltage>("setTubeVoltage", status.voltage);
-// 	dsp.add<setTubeCurrent>("setTubeCurrent", status.current);
-// 	dsp.add<getStatus>("getStaus", status.voltage, status.current);
-// 	dsp.add<takePicture>("takePicture", status.value);
-// 	net::ServerTransport st(io_context, port, dsp);
-// };
+xray::Server::Server(boost::asio::io_context& io_context, int port)
+ : transport(io_context, port, dsp)
+{
+	dsp.add<setValue>("set-value", status.value);
+	dsp.add<getValue>("get-value", status.value);
+	dsp.add<setTubeVoltage>("setTubeVoltage", status.voltage);
+	dsp.add<setTubeCurrent>("setTubeCurrent", status.current);
+	dsp.add<getStatus>("getStaus", status.voltage, status.current);
+	dsp.add<takePicture>("takePicture", status.value);
+};

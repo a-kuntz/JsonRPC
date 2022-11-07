@@ -1,4 +1,4 @@
-#include "app/src/XRayServer.h"
+#include "XRayServer.h"
 
 #include <jsonrpc/Config.h>
 #include <jsonrpc/net/ClientTransport.h>

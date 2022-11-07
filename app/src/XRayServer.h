@@ -3,6 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <jsonrpc/rpc/Dispatcher.h>
+#include <jsonrpc/net/ServerTransport.h>
 
 #include <iostream>
 
@@ -68,12 +69,12 @@ struct Status
 class Server
 {
 public:
-	Server();
-	//Server(boost::asio::io_context& io_context, int port);
+	Server(boost::asio::io_context& io_context, int port);
 
 private:
 	jsonrpc::rpc::Dispatcher dsp;
 	Status                   status;
+	jsonrpc::net::ServerTransport transport;
 };
 } // namespace xray
 #endif /* X_RAY_SERVER_H */
