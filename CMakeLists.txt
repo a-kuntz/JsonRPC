@@ -8,6 +8,9 @@ endif()
 
 ##### options #################################################################
 
+OPTION(BUILD_APP "Build application" ON)
+message(STATUS "BUILD_APP: ${BUILD_APP}" )
+
 OPTION(BUILD_EXAMPLE "Build example" ON)
 message(STATUS "BUILD_EXAMPLE: ${BUILD_EXAMPLE}" )
 
@@ -32,6 +35,11 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 ##### subdirectories ##########################################################
 
 add_subdirectory(lib)
+
+if(BUILD_APP)
+    add_subdirectory(app)
+endif()
+
 if(BUILD_EXAMPLE)
     add_subdirectory(example)
 endif()
