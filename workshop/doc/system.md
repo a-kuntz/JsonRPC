@@ -1,47 +1,4 @@
-# Workshop
-
-## System
-
-The X-Ray system is built out of two parts. The user interacts with a client software, which is installed on a terminal. The X-Ray is connected to a server, which provides the interface for communicating with the client. This comunication uses the JsonRPC protocol.
-
-```plantuml
-@startuml firstServer
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-title "Project Structure:"
-Person(user, "User")
-Container(server, "X-Ray", "Server")
-Container(client, "Terminal", "Client")
-BiRel_R(server, client, "Comunicate", "JSON")
-BiRel_R(client, user, "interacts")
-@enduml
-```
-
-Currently the system supports one class with four functions. The functions `takePicture`, `setVoltage`, `getStatus` and the function `setIntensity`. The first 3 functions work just fine. Unfortunately, the tests for the function `setIntensity` fails. The following class diagram shows the current structure of the server:
-
-```plantuml
-@startuml
-title "Server:"
-class XRayTube{
-    -double current
-    -double voltage
-    +takePicture(): char[]
-    +setTubeCurrent(double current): bool
-    +setTubeVoltage(double voltage): bool
-    +getStatus(): std::string
-}
-@enduml
-```
-
-The class `XRayTube` represents components of the X-Ray. They are allready implemented and you should not change them.
-
-TODO: Implement the features and tests. The XRayTube should return a picture. This could take all public members of XRayScan and Settings into account.
-TODO: Cheat Sheet C++/JSON/CMake?
-TODO: Add client view
-
-## Issues
-
-Your first task is to finde the bug in the `setIntensity` function and fix it.
-After the bug is fixed, your task will be to implement the following features:
+# Issues
 
 1. `setBodyPart(BodyPart bpart)`
     * Sets the body part
@@ -79,10 +36,6 @@ After the bug is fixed, your task will be to implement the following features:
 11. `getSystemStatus(): std::string`
     * Returns the System status
     * The information about the time, date and serverId should be collected and returned
-
-TODO: Add more features
-TODO: Specify the features
-TODO: Add complexity?
 
 After you have implemented all features the server should look like this:
 
@@ -211,7 +164,9 @@ ServerInterface *-- "1" Settings
 }
 @enduml
 ```
-### Issues #2
+
+## Issues #2
+
 1. `getScan(BodyPart bpart, PatientData pdata, float x, float y): std::string`
    * Calls the functions implemented in the first Iteration (Class: XRayScan)
    * returns the results of the getStatus-function
@@ -224,19 +179,3 @@ ServerInterface *-- "1" Settings
 4. `getSettings(DateTime date, Time time): std::string`
    * Calls the functions implemented in the first Iteration (Class: Settings)
    * returns the results of the getSystemStatus-function
-
-## Tasks
-
-1. Setup enviroment
-1. Clone and build repository
-1. Run the server and get used to the project
-1. Run the tests
-1. Find and fix the bug in `setIntensity`
-1. Hold a team meeting and review issues
-1. Organize in teams of two
-1. Every team should implement and test one issue
-1. Push all features
-1. Team meeting and merging of all features
-1. eventually develop and implement own feature
-
-TODO: Completet task list and add more details
