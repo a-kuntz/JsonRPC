@@ -50,19 +50,19 @@ User -> Client: setVoltage 20
 Client -> Server: "setTubeVoltage", R"([20.0])"
 Server --> Client: R"(true)"
 Client --> User: Voltage has been set succesfully!
-User -> Client: setCurrent 10.5
-Client -> Server: "setTubeCurrant", R"([10.5])"
+User -> Client: setTubeCurrent 10.5
+Client -> Server: "setTubeCurrent", R"([10.5])"
 Server --> Client: R"(true)"
 Client --> User: Current has been set succesfully!
 @enduml
 ```
 
-Currently the system supports one class with four functions. The functions `takePicture`, `setTubeVoltage`, `setTuneCurrent` and the function `getStatus`. The following class diagram shows the current structure of the server:
+Currently the system supports four functions. The functions `takePicture`, `setTubeVoltage`, `setTuneCurrent` and `getConfig`. The following class diagram shows the current structure of the server:
 
 ```plantuml
 @startuml
 title "Server:"
-class XRayTube{
+class XRayServer{
     +takePicture(): char[]
     +setTubeCurrent(double current): bool
     +setTubeVoltage(double voltage): bool
@@ -71,7 +71,7 @@ class XRayTube{
 @enduml
 ```
 
-## Sampele client server session
+## Sample client server session
 
 To run the server start the server at the terminal with a port number:
 
@@ -79,15 +79,15 @@ To run the server start the server at the terminal with a port number:
 xray-server 4242 
 ```
 
-You can now send commands from the client to the server using command line arguments:
+On a second terminal you can now send commands from the client to the server using command line arguments:
 
 ```shell
-xray-client localhost 4242 tubeCurrent 20
-xray-client localhost 4242 tubeVoltage 20
+xray-client localhost 4242 setTubeCurrent 20
+xray-client localhost 4242 setTubeVoltage 20
 xray-client localhost 4242 takePicture
 ```
 
-If everything works properly the output could look like this:
+If everything works properly the output should look like this:
 
 ```shell
 $xray-client localhost 4242 tubeCurrent 20
@@ -137,15 +137,19 @@ cd JsonRPC
 
 ## Get used to the project
 
-The build process automaticly runs the included test. You will se that one test fails. Befor you going to find and fix the bug you may want to brows throu the code. With the comands above you can also try out the programm and function manually.
+The build process automaticly runs the included tests. You will see that one test fails. Before you going to find and fix the bug you may want to browse through the code. With the commands above you can also try out the programm and function manually.
 
-## Find and fix your fisrt bug
+## Find and fix your first bug
 
-As you allready know there is a bug in the project. Find it and fix it. Therefore you may take a look at the test output. You also can run the single functions mannually. You can run the tests without builing the whol project by navigating to the build directory (`cd build`) and use `make all test`.
+As you already know there is a bug in the project. Find it and fix it. Therefore you may take a look at the test output. You also can run the single functions manually. You can run the tests without building the whole project by using the following commands:
 
+```shell
+cd build
+make all test
+```
 ## Implement new functionality
 
-In the GitHub Repro you will find a list of issues. Every issue represents a new feature which should be implemented. Please paln your work together before starting to implement the features. Maybe a team meeting is helpfull for this. Please organize in a group of two to implement one issue. Please note that every new feature should be testet sufficent with unit tests. After you have implemented all features the server should look like this:
+In the GitHub Repo you will find a list of issues. Every issue represents a new feature which should be implemented. Please plan your work together before starting to implement the features. Maybe a team meeting is helpful for this. Please organize in a group of two to implement one issue. Please note that every new feature should be tested sufficent with unit tests. After all features have been implemented the server should look like this:
 
 ```plantuml
 @startuml
@@ -160,7 +164,7 @@ package "Server" {
             +setBodyPart(BodyPart bpart)
             +setPatientData(PatientData pdata)
             +adjustBeam(float x, float y)
-            +getStatus(): std::string 
+            +getConfig(): xray:Config 
             }
         enum BodyPart {
             thorax
@@ -182,7 +186,7 @@ package "Server" {
         +takePicture(): char[]
         +setTubeCurrent(double current): bool
         +setTubeVoltage(double voltage): bool
-        +getStatus(): std::string
+        +getConfig(): xray::Config
         +getDosage(): std::float
     }
     class Actor{
@@ -190,7 +194,7 @@ package "Server" {
         -std::string anomalies
         +setExaminer(int id)
         +setAnomalies(std:string)
-        +getStatus(): std::string
+        +getConfig(): xray::config
     }
     package "Settings"{
         class Settings{

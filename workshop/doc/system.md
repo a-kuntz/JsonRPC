@@ -11,7 +11,7 @@
 3. `adjustBeam(flost x, float y)`
     * Adjusts the size of the beam
     * The parameters have to be set to the datafield
-4. `XRayScan::getStatus(): std::string`
+4. `XRayScan::getConfig(): xray::Config`
     * Returns the status of the set parameters
     * The information about the Patient, the Bodypart and the beam should be collected and    returned
 5. `getDosage(): std::float`
@@ -23,7 +23,7 @@
 7. `setAnomalies(std:: string)`
     * Sets the complications occured during the exam
     * The parameter have to be set to the datafield
-8.  `Actor::getStatus(): std::string`
+8.  `Actor::getConfig(): xray::Config`
     * Returns the status of the set parameters
     * The information about the examinerId and the aanomalies should be collected and returned
 9.  `setDate(DateTime date)`
