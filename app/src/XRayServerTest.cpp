@@ -18,7 +18,7 @@
 using namespace std::chrono_literals;
 using namespace jsonrpc;
 
-class ServerClientTest : public ::testing::test
+class XRayServerTest : public ::testing::Test
 {
 protected:
 	boost::asio::io_context    _ioc;
@@ -31,7 +31,7 @@ protected:
 	std::thread                _thread;
 
 public:
-	ServerClientTest()
+	XRayServerTest()
 		: _serverTransport(_ioc, _port, _dispatcher)
 		, _clientTransport(_ioc)
 		, _client(_clientTransport)
@@ -40,7 +40,7 @@ public:
 		_clientTransport.connect("localhost", _port);
 	}
 
-	~ServerClientTest()
+	~XRayServerTest()
 	{
 		_ioc.stop();
 		_thread.join();
@@ -60,17 +60,19 @@ public:
 	{
 		return rpc::Json::parse(s);
 	}
-}
+};
 
-TEST_F(ClientServerTest, Workshop)
+TEST_F(XRayServerTest, Workshop)
 {
-	_dispatcher.add<xray::setTubeVoltage>("setTubeVoltage");
-	_dispatcher.add<xray::setTubeCurrent>("setTubeCurrent");
-	_dispatcher.add<xray::getStatus>("getStatus");
-	_dispatcher.add<xray::takePicture>("takePicture");
+	xray::Status status;
 
-	ASSERT_EQ(call("setTubeVoltage", R"([42.1])"), expect(R"(Tube Voltage has been set to 42.1)"));
-	ASSERT_EQ(call("setTubeCurrent", R"([22.4])"), expect(R"(Tube Current has been set to 22.4)"));
-	ASSERT_EQ(call("getStatus", R"([{},{}])"), expect(R"(Tube Current or Tube Voltage are not set.)"));
-	ASSERT_EQ(call("setTubeCurrent", R"([{}])"), expect(R"(Picture taken.)"));
+	_dispatcher.add<xray::setTubeVoltage>("setTubeVoltage", status.voltage);
+	_dispatcher.add<xray::setTubeCurrent>("setTubeCurrent", status.current);
+	_dispatcher.add<xray::getStatus>("getStatus", status.voltage, status.current);
+	_dispatcher.add<xray::takePicture>("takePicture", status.value);
+
+	ASSERT_EQ(call("setTubeVoltage", "42.1"), expect(R"("Tube Voltage has been set to 42.1")"));
+	ASSERT_EQ(call("setTubeCurrent", R"("22.4")"), expect(R"("Tube Current has been set to 22.4")"));
+	ASSERT_EQ(call("getStatus", R"([{},{}])"), expect(R"("Tube Current or Tube Voltage are not set.")"));
+	ASSERT_EQ(call("takePicture", R"({})"), expect(R"("Picture taken.")"));
 }

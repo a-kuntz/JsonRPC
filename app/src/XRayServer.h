@@ -2,8 +2,8 @@
 #define X_RAY_SERVER_H
 
 #include <boost/asio.hpp>
-#include <jsonrpc/rpc/Dispatcher.h>
 #include <jsonrpc/net/ServerTransport.h>
+#include <jsonrpc/rpc/Dispatcher.h>
 
 #include <iostream>
 
@@ -61,9 +61,9 @@ private:
 };
 struct Status
 {
-	double value;
-	double voltage;
-	double current;
+	double value = 0;
+	double voltage = 0;
+	double current = 0;
 };
 
 class Server
@@ -72,8 +72,8 @@ public:
 	Server(boost::asio::io_context& io_context, int port);
 
 private:
-	jsonrpc::rpc::Dispatcher dsp;
-	Status                   status;
+	jsonrpc::rpc::Dispatcher      dsp;
+	Status                        status;
 	jsonrpc::net::ServerTransport transport;
 };
 } // namespace xray

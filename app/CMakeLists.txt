@@ -28,12 +28,13 @@ target_link_libraries(xrayserver PRIVATE jsonrpc)
 
 add_executable(xraytest
 	src/testmain.cpp
-	# src/XRayServerTest.cpp
+	src/XRayServerTest.cpp
 )
 
 target_compile_features(xraytest PRIVATE cxx_std_17)
 
 target_link_libraries(xraytest jsonrpc)
 target_link_libraries(xraytest GTest::GTest)
+target_link_libraries(xraytest xray)
 
 add_test(NAME xraytest COMMAND xraytest)
