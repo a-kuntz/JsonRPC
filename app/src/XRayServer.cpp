@@ -14,7 +14,14 @@ xray::setTubeVoltage::setTubeVoltage(double& voltage)
 rpc::Json xray::setTubeVoltage::call(const rpc::Json& data) //override
 {
 	_voltage = data;
-	return true;
+	if (_voltage > 0 && _voltage <= 100)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 xray::setTubeCurrent::setTubeCurrent(double& current)
@@ -23,7 +30,14 @@ xray::setTubeCurrent::setTubeCurrent(double& current)
 rpc ::Json xray::setTubeCurrent::call(const rpc::Json& data) //override
 {
 	_current = data;
-	return true;
+	if (_current > 0 && _current <= 100)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 xray::getTubeConfig::getTubeConfig(double& voltage, double& current)
@@ -32,14 +46,12 @@ xray::getTubeConfig::getTubeConfig(double& voltage, double& current)
 {}
 rpc ::Json xray::getTubeConfig::call(const rpc::Json& data) //override
 {
-	if (_voltage == 0 || _current == 0)
-	{
-		return "Tube Current or Tube Voltage are not set.";
-	}
-	else
-	{
-		return "Current settings are: Tube Voltage = Tube Current = ";
-	}
+
+	std::map<std::string, double> config{
+		{"Voltage", _voltage},
+		{"Current", _current},
+	};
+	return config;
 }
 
 xray::takePicture::takePicture(double& value)

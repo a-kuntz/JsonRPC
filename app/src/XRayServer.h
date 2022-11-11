@@ -45,9 +45,9 @@ private:
 };
 struct Status
 {
-	double value   = 0;
-	double voltage = 0;
-	double current = 0;
+	double value   = 0.0;
+	double voltage = 0.0;
+	double current = 0.0;
 };
 
 class Server

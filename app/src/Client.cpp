@@ -14,9 +14,9 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		if (argc != 3)
+		if (argc != 4 && argc != 5)
 		{
-			std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
+			std::cerr << "Usage: " << argv[0] << " <host> <port> <command> [<arg>]\n";
 			return 1;
 		}
 
@@ -27,12 +27,9 @@ int main(int argc, char* argv[])
 
 		auto client = rpc::Client(transport);
 
-		client.call("setTubeVoltage", 42.0);
-		client.call("setTubeCurrent", 42.0);
-		client.call("getTubeConfig", {});
-		client.call("takePicture", {});
-		
-		client.call("unknown method", {});
+		auto result = client.call(argv[3], (argc == 5 ? rpc::Json::parse(argv[4]) : rpc::Json{}));
+
+		std::cout << result << "\n";
 	}
 	catch (std::exception& e)
 	{
