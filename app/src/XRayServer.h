@@ -10,22 +10,6 @@
 namespace xray
 {
 
-struct getValue : public jsonrpc::rpc::IMethod
-{
-	getValue(double& value);
-	jsonrpc::rpc::Json call(const jsonrpc::rpc::Json& data);
-
-private:
-	double& _value;
-};
-struct setValue : public jsonrpc::rpc::IMethod
-{
-	setValue(double& value);
-	jsonrpc::rpc::Json call(const jsonrpc::rpc::Json& data);
-
-private:
-	double& _value;
-};
 struct setTubeVoltage : public jsonrpc::rpc::IMethod
 {
 	setTubeVoltage(double& voltage);
@@ -42,9 +26,9 @@ struct setTubeCurrent : public jsonrpc::rpc::IMethod
 private:
 	double& _current;
 };
-struct getStatus : public jsonrpc::rpc::IMethod
+struct getTubeConfig : public jsonrpc::rpc::IMethod
 {
-	getStatus(double& voltage, double& current);
+	getTubeConfig(double& voltage, double& current);
 	jsonrpc::rpc::Json call(const jsonrpc::rpc::Json& data);
 
 private:
@@ -61,7 +45,7 @@ private:
 };
 struct Status
 {
-	double value = 0;
+	double value   = 0;
 	double voltage = 0;
 	double current = 0;
 };

@@ -68,11 +68,11 @@ TEST_F(XRayServerTest, Workshop)
 
 	_dispatcher.add<xray::setTubeVoltage>("setTubeVoltage", status.voltage);
 	_dispatcher.add<xray::setTubeCurrent>("setTubeCurrent", status.current);
-	_dispatcher.add<xray::getStatus>("getStatus", status.voltage, status.current);
+	_dispatcher.add<xray::getTubeConfig>("getTubeConfig", status.voltage, status.current);
 	_dispatcher.add<xray::takePicture>("takePicture", status.value);
 
-	ASSERT_EQ(call("setTubeVoltage", "42.1"), expect(R"("Tube Voltage has been set to 42.1")"));
-	ASSERT_EQ(call("setTubeCurrent", R"("22.4")"), expect(R"("Tube Current has been set to 22.4")"));
-	ASSERT_EQ(call("getStatus", R"([{},{}])"), expect(R"("Tube Current or Tube Voltage are not set.")"));
+	ASSERT_EQ(call("setTubeVoltage", "42.1"), expect(R"(true)"));
+	ASSERT_EQ(call("setTubeCurrent", "22.4"), expect(R"(true)"));
+	ASSERT_EQ(call("getTubeConfig", R"({})"), expect(R"("Current settings are: Tube Voltage = Tube Current = ")"));
 	ASSERT_EQ(call("takePicture", R"({})"), expect(R"("Picture taken.")"));
 }
