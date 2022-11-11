@@ -57,16 +57,16 @@ Client --> User: Current has been set succesfully!
 @enduml
 ```
 
-Currently the system supports four functions. The functions `takePicture`, `setTubeVoltage`, `setTuneCurrent` and `getConfig`. The following class diagram shows the current structure of the server:
+Currently the system supports four functions. The functions `takePicture`, `setTubeVoltage`, `setTubeCurrent` and `getTubeConfig`. The following class diagram shows the current structure of the server:
 
 ```plantuml
 @startuml
 title "Server:"
 class XRayServer{
-    +takePicture(): char[]
     +setTubeCurrent(double current): bool
     +setTubeVoltage(double voltage): bool
-    +getConfig(): xray::Config
+    +takePicture(): char[]
+    +getTubeConfig(): xray::Config
 }
 @enduml
 ```
@@ -153,19 +153,49 @@ In the GitHub Repo you will find a list of issues. Every issue represents a new 
 
 ```plantuml
 @startuml
-title "First Iteration:"
+title "Implemented Issues:"
 package "Server" {
-    package "XRayScan"{
-        class XRayScan{
-            -BodyPart bpart
-            -PatientData pdata
-            -int x
-            -int y
-            +setBodyPart(BodyPart bpart)
-            +setPatientData(PatientData pdata)
-            +adjustBeam(float x, float y)
-            +getConfig(): xray:Config 
-            }
+    interface "Functions" { 
+        -BodyPart bpart
+        -PatientData pdata
+        -float x
+        -float y
+        ..
+        -double voltage
+        -double current
+        ..
+        -int examinerId
+        -std::string anomalies
+        ..
+        -int ServerID
+        -DateTime date
+        -Time time
+        ==
+        +setBodyPart(BodyPart bpart): bool
+        +setPatientData(PatientData pdata): bool
+        +adjustBeam(float x, float y): bool
+        +getScanConfig(): xray:Config 
+
+        +setTubeCurrent(double current): bool
+        +setTubeVoltage(double voltage): bool 
+        +takePicture(): char[]
+        +getTubeConfig(): xray::Config
+        +getDosage(): std::float
+        
+        +setExaminer(int id): bool
+        +setAnomalies(std:string): bool
+        +getActorConfig(): xray::Config
+  
+        +setDate(DateTime date): bool
+        +setTime(Time time): bool 
+        +getSystemStatus(): std::string
+    }
+    together {
+        struct PatientData {
+            -std::string name
+            -int age
+            -int id
+        }
         enum BodyPart {
             thorax
             hand
@@ -173,50 +203,21 @@ package "Server" {
             knee
             foot
         }
-        struct PatientData {
-            -std::string name
-            -int age
-            -int id
-            }
+        
     }
-
-    class XRayTube{
-        -double voltage
-        -double current
-        +takePicture(): char[]
-        +setTubeCurrent(double current): bool
-        +setTubeVoltage(double voltage): bool
-        +getConfig(): xray::Config
-        +getDosage(): std::float
-    }
-    class Actor{
-        -int examinerId
-        -std::string anomalies
-        +setExaminer(int id)
-        +setAnomalies(std:string)
-        +getConfig(): xray::config
-    }
-    package "Settings"{
-        class Settings{
-        + {static} int ServerID
-        -DateTime date
-        -Time time
-        +setDate(DateTime date)
-        +setTime(Time time)
-        +getSystemStatus(): std::string
-        }
-
-        struct DateTime{
-            int year
-            int month
-            int day
-        }
-
+    together {
         struct Time{
-            int hour
-            int minute
-            }
+            -int hour
+            -int minute
+        }
+        struct DateTime{
+            -int year
+            -int month
+            -int day
+        }
     }
+    PatientData -[hidden]-> Time 
 
+@enduml  
 }
 ```
