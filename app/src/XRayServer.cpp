@@ -13,9 +13,10 @@ xray::setTubeVoltage::setTubeVoltage(double& voltage)
 {}
 rpc::Json xray::setTubeVoltage::call(const rpc::Json& data) //override
 {
-	_voltage = data;
+
 	if (_voltage > 0 && _voltage <= 100)
 	{
+		_voltage = data;
 		return true;
 	}
 	else
@@ -29,9 +30,10 @@ xray::setTubeCurrent::setTubeCurrent(double& current)
 {}
 rpc ::Json xray::setTubeCurrent::call(const rpc::Json& data) //override
 {
-	_current = data;
+
 	if (_current > 0 && _current <= 100)
 	{
+		_current = data;
 		return true;
 	}
 	else
