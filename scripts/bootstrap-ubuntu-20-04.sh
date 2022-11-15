@@ -4,6 +4,7 @@ sudo apt update
 
 sudo apt install -y \
 	cmake \
+	cmake-curses-gui \
 	git \
 	git-gui \
 	gitk \
