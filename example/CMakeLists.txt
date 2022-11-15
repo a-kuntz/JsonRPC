@@ -37,7 +37,8 @@ target_link_libraries(mbox PRIVATE Boost::Boost)
 target_link_libraries(mbox PRIVATE fmt::fmt)
 target_link_libraries(mbox PRIVATE jsonrpc)
 
-#sample mbox client session
+##### sample mbox client session ##############################################
+
 add_executable(mbox_session
 	src/MessageBoxClientSession.cpp
 )
