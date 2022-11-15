@@ -81,7 +81,7 @@ To build the library, use the convenience build script
 or build manually
 
 ```shell
-conan install . --install-folder=build -pr:b=default -s build_type=Debug
+conan install . --install-folder=build -pr:b=default -s build_type=Debug --build=missing
 cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ```
