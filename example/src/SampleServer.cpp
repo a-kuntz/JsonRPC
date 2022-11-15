@@ -54,6 +54,14 @@ private:
 	double& _value;
 };
 
+struct Echo : public rpc::IMethod
+{
+	rpc::Json call(const rpc::Json& data) override
+	{
+		return data;
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	try
@@ -72,6 +80,7 @@ int main(int argc, char* argv[])
 		dsp.add<Bar>("bar");
 		dsp.add<SetValue>("set-value", value);
 		dsp.add<GetValue>("get-value", value);
+		dsp.add<Echo>("echo");
 		net::ServerTransport st(io_context, std::atoi(argv[1]), dsp);
 
 		io_context.run();

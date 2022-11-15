@@ -14,9 +14,9 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		if (argc != 4 && argc != 5)
+		if (argc != 3)
 		{
-			std::cerr << "Usage: " << argv[0] << " <host> <port> <command> [<arg>]\n";
+			std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
 			return 1;
 		}
 
@@ -26,9 +26,11 @@ int main(int argc, char* argv[])
 		transport.connect(argv[1], atoi(argv[2]));
 
 		auto client = rpc::Client(transport);
-		auto result = client.call(argv[3], (argc == 5 ? rpc::Json::parse(argv[4]) : rpc::Json{}));
-
-		std::cout << result << "\n";
+		client.call("add", "john");
+		client.call("add", "fred");
+		client.call("list", {});
+		client.call("send", {{"to", "fred"}, {"from", "john"}, {"msg", "hi fred"}});
+		client.call("receive", "fred");
 	}
 	catch (std::exception& e)
 	{

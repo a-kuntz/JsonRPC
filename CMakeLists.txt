@@ -5,8 +5,9 @@ project(JsonRPC)
 ##### dependencies ############################################################
 
 include(cmake/ConanInstallDependencies.cmake)
-find_package(nlohmann_json REQUIRED)
+find_package(fmt REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem program_options)
+find_package(nlohmann_json REQUIRED)
 
 find_package(GTest REQUIRED)
 
