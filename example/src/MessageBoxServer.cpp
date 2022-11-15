@@ -18,7 +18,6 @@ struct Msg
 	std::string ts;
 };
 using MBox = std::map<std::string, std::vector<Msg>>;
-// using MBox = std::map<std::string, std::vector<std::pair<std::string, std::string>>>;
 
 struct Add : public rpc::IMethod
 {
