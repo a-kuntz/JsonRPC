@@ -75,14 +75,14 @@ cd JsonRPC
 To build the library, use the convenience build script
 
 ```shell
-./build.sh
+./build.sh Debug
 ```
 
 or build manually
 
 ```shell
 conan install . --install-folder=build -pr:b=default -s build_type=Debug
-cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DBUILD_EXAMPLE=ON
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ```
 

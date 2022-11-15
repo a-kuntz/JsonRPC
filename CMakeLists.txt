@@ -8,10 +8,10 @@ endif()
 
 ##### options #################################################################
 
-OPTION(BUILD_EXAMPLE "Build example" OFF)
+OPTION(BUILD_EXAMPLE "Build example" ON)
 message(STATUS "BUILD_EXAMPLE: ${BUILD_EXAMPLE}" )
 
-OPTION(BUILD_TESTS "Build tests" OFF)
+OPTION(BUILD_TESTS "Build tests" ON)
 message(STATUS "BUILD_TESTS: ${BUILD_TESTS}" )
 
 ##### dependencies ############################################################
