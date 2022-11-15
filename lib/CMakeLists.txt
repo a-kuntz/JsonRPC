@@ -15,7 +15,7 @@ set_target_properties(jsonrpc PROPERTIES OUTPUT_NAME jsonrpc$<$<CONFIG:Debug>:d>
 ##### target link libraries ###################################################
 
 target_link_libraries(jsonrpc PUBLIC nlohmann_json::nlohmann_json)
-target_link_libraries(jsonrpc PUBLIC Boost::boost)
+target_link_libraries(jsonrpc PUBLIC Boost::boost pthread)
 
 ##### generate and include config header ######################################
 
