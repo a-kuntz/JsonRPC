@@ -4,6 +4,7 @@ sudo apt update
 
 sudo apt install -y \
 	cmake \
+	cmake-curses-gui \
 	git \
 	git-gui \
 	gitk \
@@ -12,6 +13,8 @@ sudo apt install -y \
 sudo snap install code --classic
 
 pip3 install conan
+conan config init
+conan profile update settings.compiler.libcxx=libstdc++11 default
 
 if $(grep -q .local/bin ~/.bashrc)
 then
