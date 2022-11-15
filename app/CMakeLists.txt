@@ -3,7 +3,7 @@
 add_library(xray
 	src/XRayServer.cpp
 )
-target_link_libraries(xray PRIVATE jsonrpc)
+target_link_libraries(xray PUBLIC jsonrpc)
 
 ##### client ##################################################################
 
@@ -33,8 +33,7 @@ add_executable(xraytest
 
 target_compile_features(xraytest PRIVATE cxx_std_17)
 
-target_link_libraries(xraytest jsonrpc)
-target_link_libraries(xraytest GTest::GTest)
-target_link_libraries(xraytest xray)
+target_link_libraries(xraytest PRIVATE GTest::GTest)
+target_link_libraries(xraytest PRIVATE xray)
 
 add_test(NAME xraytest COMMAND xraytest)
