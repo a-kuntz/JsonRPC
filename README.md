@@ -72,7 +72,13 @@ cd JsonRPC
 
 ### Build
 
-To build the library, type:
+To build the library, use the convenience build script
+
+```shell
+./build.sh
+```
+
+or build manually
 
 ```shell
 conan install . --install-folder=build -pr:b=default -s build_type=Debug
