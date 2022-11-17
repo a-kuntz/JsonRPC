@@ -1,5 +1,7 @@
 # Issues
 
+//TODO: Prioritize issus and connect with user storys
+
 1.  `setBodyPart(BodyPart bpart): bool`
     * Sets the body part
     * ?You have to implement an enum which represents the BodyParts?
@@ -30,7 +32,7 @@
     * Sets the date
     * ?You have to implement a struct which represents the DateTime?
     * The parameter should be set to the datafield
-    `setTime(Time time): bool`
+9.  `setTime(Time time): bool`
     * Sets the time
     * ?You have to implement a struct which represents the Time?
     * The parameter should be set to the datafield
@@ -38,7 +40,15 @@
     * Returns the System status
     * The information about the time, date and serverId should be collected and returned
 
-For the next iteration, the server should get an interface, which will be called instead of calling the function directly. The operator of the client should call the interface function for the desired operation and the interface function will handle the data distribution to the base functions.
+## User Story
+
+//TODO: Add content and explenation
+
+1. Add patient data into picture
+1. Diferent pictures for diffferen combinations of parameter
+1. Automatisierte Diagnose routine
+    * Nach jedem startup
+    * Prüfe registrierte Methoden
 
 ## Issues #2
 

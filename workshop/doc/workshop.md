@@ -147,6 +147,7 @@ As you already know there is a bug in the project. Find it and fix it. Therefore
 cd build
 make all test
 ```
+
 ## Implement new functionality
 
 In the GitHub Repo you will find a list of issues. Every issue represents a new feature which should be implemented. Please plan your work together before starting to implement the features. Maybe a team meeting is helpful for this. Please organize in a group of two to implement one issue. Please note that every new feature should be tested sufficent with unit tests. After all features have been implemented the server should look like this:
@@ -221,3 +222,16 @@ package "Server" {
 @enduml  
 }
 ```
+
+## Helpfull ressources
+
+C++:
+* https://hackingcpp.com
+* https://en.cppreference.com/w/
+* https://github.com/mortennobel/cpp-cheatsheet
+
+Linux:
+* https://www2.icp.uni-stuttgart.de/~icp/mediawiki/images/b/bd/Sim_Meth_I_T0_cheat_sheet_10_11.pdf
+
+JSON:
+* https://quickref.me/json
