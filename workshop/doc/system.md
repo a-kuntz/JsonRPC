@@ -13,48 +13,45 @@
 3.  `adjustBeam(flost x, float y): bool`
     * Adjusts the size of the beam
     * The parameters have to be set to the datafield
-4.  `getScanConfig(): xray::Config`
-    * Returns the configuation of the set parameters
-    * The information about the Patient, the Bodypart and the beam should be collected and    returned
-5.  `getDosage(): std::float`
-    * Returns the dosage emitted to the patient
-    * The dosage is calculated by the following formula: dos=(current + voltage)/2
+4.  `setDate(DateTime date): bool`
+    * Sets the date
+    * ?You have to implement a struct which represents the DateTime?
+    * The parameter should be set to the datafield
+5.  `setTime(Time time): bool`
+    * Sets the time
+    * ?You have to implement a struct which represents the Time?
+    * The parameter should be set to the datafield
 6.  `setExaminer(int id): bool`
     * Sets the ID of the performing Examiner
     * The parameter should be set to the datafield
 7.  `setAnomalies(std:: string): bool`
     * Sets the complications occured during the exam
     * The parameter should be set to the datafield
-8.  `getActorConfig(): xray::Config`
-    * Returns the configuration of the set parameters
-    * The information about the examinerId and the aanomalies should be collected and returned
-9.  `setDate(DateTime date): bool`
-    * Sets the date
-    * ?You have to implement a struct which represents the DateTime?
-    * The parameter should be set to the datafield
-9.  `setTime(Time time): bool`
-    * Sets the time
-    * ?You have to implement a struct which represents the Time?
-    * The parameter should be set to the datafield
-10. `getSystemStatus(): std::string`
+8.  `getScanConfig(): xray::Config`
+    * Returns the configuation of the set parameters
+    * The information about the Patient, the Bodypart and the beam should be collected and    returned
+9.  `getSystemStatus(): std::string`
     * Returns the System status
     * The information about the time, date and serverId should be collected and returned
-
+10. `getActorConfig(): xray::Config`
+    * Returns the configuration of the set parameters
+    * The information about the examinerId and the aanomalies should be collected and returned
+11. `getDosage(): std::float`
+    * Returns the dosage emitted to the patient
+    * The dosage is calculated by the following formula: dos=(current + voltage)/2
 ## User Story
-
-//TODO: Add content and explenation
 
 1. Add patient data into picture
 
-In the past, there has often been confusion between the X-ray scanns of different patients. The hospitals tryed to prevent that Issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. In the new system this sould not be necessary anymore. The system should work digital only. Because of safty reasons the label should be added as soon as possible to the picture.
+In the past, there has often been confusion between the X-ray scans of different patients. The hospitals tried to prevent that issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. In the new system this sould not be necessary anymore. The system should work digital only. Because of safety reasons the label should be added to the picture as soon as possible.
 
-1. Diferent pictures for diffferen combinations of parameter
+1. Different pictures for different combinations of parameter
 
-The delivery of the X-ray tube and camara is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the complet system. Therefore, the X-ray should returne a dummy picture. In reallity this picture would depend on the given parameters. The dummy picture should behave the same way.
+The delivery of the X-ray tube and camera is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the finished system. Therefore, the X-ray should return a dummy picture. In reality this picture would depend on the given parameters. The dummy picture should behave the same way.
 
-1. Automatisierte Diagnose routine
-    * Nach jedem startup
-    * Prüfe registrierte Methoden
+1. automatic check routine
+
+Since the X-Ray is still in development and errors can occur in operation, the customer wants to have an automatic check routine. This routine should run everytime the X-Ray Server is started and should return information that are necessary for a complication-free usage. 
 
 ## Issues #2
 

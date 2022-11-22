@@ -46,13 +46,13 @@ As a Response, the server also returns a JSON object. This contains the result o
 @startuml
 title Server client communication using JSON
 actor User
-User -> Client: setVoltage 20
-Client -> Server: "setTubeVoltage", R"([20.0])"
-Server --> Client: R"(true)"
+User -> Client: setTubeVoltage 20.0
+Client -> Server: {method: setTubeVoltage,params: [20.5]}
+Server --> Client: {result: true}
 Client --> User: Voltage has been set succesfully!
 User -> Client: setTubeCurrent 10.5
-Client -> Server: "setTubeCurrent", R"([10.5])"
-Server --> Client: R"(true)"
+Client -> Server: {method: setTubeCurrent,params: [10.5]}
+Server --> Client: {result: true}
 Client --> User: Current has been set succesfully!
 @enduml
 ```
