@@ -45,7 +45,13 @@
 //TODO: Add content and explenation
 
 1. Add patient data into picture
+
+In the past, there has often been confusion between the X-ray scanns of different patients. The hospitals tryed to prevent that Issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. In the new system this sould not be necessary anymore. The system should work digital only. Because of safty reasons the label should be added as soon as possible to the picture.
+
 1. Diferent pictures for diffferen combinations of parameter
+
+The delivery of the X-ray tube and camara is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the complet system. Therefore, the X-ray should returne a dummy picture. In reallity this picture would depend on the given parameters. The dummy picture should behave the same way.
+
 1. Automatisierte Diagnose routine
     * Nach jedem startup
     * Prüfe registrierte Methoden
