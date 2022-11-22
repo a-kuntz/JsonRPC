@@ -38,20 +38,26 @@
     * The information about the examinerId and the aanomalies should be collected and returned
 11. `getDosage(): std::float`
     * Returns the dosage emitted to the patient
-    * The dosage is calculated by the following formula: dos=(current + voltage)/2
+    * The dosage is calculated by the following formula: dos=(current + voltage)/2#
+
 ## User Story
 
 1. Add patient data into picture
 
-In the past, there has often been confusion between the X-ray scans of different patients. The hospitals tried to prevent that issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. In the new system this sould not be necessary anymore. The system should work digital only. Because of safety reasons the label should be added to the picture as soon as possible.
+In the past, there has often been confusion between the X-ray scans of different patients. The hospitals tried to prevent that issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. This sticker included the sure and last name, the patient number and the date of birth. In the new system this sould not be necessary anymore. The system should work digital only. Because of safety reasons the label should be added to the picture as soon as possible.
 
 1. Different pictures for different combinations of parameter
 
-The delivery of the X-ray tube and camera is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the finished system. Therefore, the X-ray should return a dummy picture. In reality this picture would depend on the given parameters. The dummy picture should behave the same way.
+The delivery of the X-ray tube and camera is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the finished system. Therefore, the X-ray should return a dummy picture. In reality this picture would depend on the given parameters, expecally the body part, the volatge and the current. The dummy picture should behave the same way.
 
-1. automatic check routine
+1. automatic system check
 
-Since the X-Ray is still in development and errors can occur in operation, the customer wants to have an automatic check routine. This routine should run everytime the X-Ray Server is started and should return information that are necessary for a complication-free usage. 
+Since the X-ray is a medicine product it needs to make shure that it woorks correct. Therefore a check routine should be perforemd every time the client is started. The following points are part of the evaluation:
+
+* The server should provide a semantic vershioning (major.minor.patch)
+* The client should verify its compatibility with the server version.
+* The server needs one minute to start the x-ray tube. This behaviour needs to be simmulated by the server.
+* The client should make shure that the server is ready to respond.
 
 ## Issues #2
 

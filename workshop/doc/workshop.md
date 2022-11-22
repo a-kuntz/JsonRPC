@@ -100,17 +100,17 @@ This is a picture ;)
 
 ## Tasks
 
-1. Setup enviroment
-1. Clone and build repository
+1. Setup enviroment (15min)
+1. Clone and build repository (15min)
 1. Get used to the project: Run client, server and module test
-1. Find and fix your first bug
+1. Find and fix your first bug (15min)
 1. Your software development experience: Implement new functionality
-    1. Hold a team meeting and review issues
+    1. Hold a team meeting and review issues (15min)
     1. Organize in teams of two
-    1. Every team should implement and test one issue
-    1. Push all features
-    1. Team meeting and merging of all features
-    1. eventually develop and implement own feature
+    1. Every team should implement and test one issue (45min)
+    1. (Push and merge all features)
+    1. Team meeting to palan how to implement the user story (15-30min)
+    1. implement user storys (45-60min)
 
 ## Setup enviroment
 
@@ -223,15 +223,29 @@ package "Server" {
 }
 ```
 
+## Implement user story
+
+The sales team had mde the following nodes during a meeting with the cutomer. Review the notes in a team meeting and make a plan how to implement the described features. Afterward implement and test the new features.
+
+Since the X-ray is a medicine product it needs to make shure that it woorks correct. Therefore a check routine should be perforemd every time the client is started. The following points are part of the evaluation:
+
+* The server should provide a semantic versioning (major.minor.patch)
+* The client should verify its compatibility with the server version.
+* The server needs one minute to start the x-ray tube. This behaviour needs to be simmulated by the server.
+* The client should make shure that the server is ready to respond.
+
 ## Helpfull ressources
 
 C++:
-* https://hackingcpp.com
-* https://en.cppreference.com/w/
-* https://github.com/mortennobel/cpp-cheatsheet
+* [hackingcpp](https://hackingcpp.com)
+* [cppreference](https://en.cppreference.com/w/)
+* [cheat sheet](https://github.com/mortennobel/cpp-cheatsheet)
 
 Linux:
-* https://www2.icp.uni-stuttgart.de/~icp/mediawiki/images/b/bd/Sim_Meth_I_T0_cheat_sheet_10_11.pdf
+* [bash cheet sheet](https://www2.icp.uni-stuttgart.de/~icp/mediawiki/images/b/bd/Sim_Meth_I_T0_cheat_sheet_10_11.pdf)
 
 JSON:
-* https://quickref.me/json
+* [JSON quick reference](https://quickref.me/json)
+
+Semantic Versioning:
+* [semantic versioning](https://semver.org/lang/de/)
