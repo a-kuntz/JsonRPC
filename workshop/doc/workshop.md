@@ -46,7 +46,7 @@ As a Response, the server also returns a JSON object. This contains the result o
 @startuml
 title Server client communication using JSON
 actor User
-User -> Client: setTubeVoltage 20.0
+User -> Client: setTubeVoltage 20.5
 Client -> Server: {method: setTubeVoltage,params: [20.5]}
 Server --> Client: {result: true}
 Client --> User: Voltage has been set succesfully!
@@ -76,25 +76,25 @@ class XRayServer{
 To run the server start the server at the terminal with a port number:
 
 ```shell
-xray-server 4242 
+xrayserver 4242 
 ```
 
 On a second terminal you can now send commands from the client to the server using command line arguments:
 
 ```shell
-xray-client localhost 4242 setTubeCurrent 20
-xray-client localhost 4242 setTubeVoltage 20
-xray-client localhost 4242 takePicture
+xrayclient localhost 4242 setTubeCurrent 12.3
+xrayclient localhost 4242 setTubeVoltage 42.1
+xrayclient localhost 4242 takePicture {}
 ```
 
 If everything works properly the output should look like this:
 
 ```shell
-$xray-client localhost 4242 tubeCurrent 20
-Current was set sucessfully!
-$xray-client localhost 4242 tubeVoltage 20
-Voltage was set sucessfully!
-$xray-client localhost 4242 takePicture
+$xrayclient localhost 4242 tubeCurrent 12.3
+true
+$xrayclient localhost 4242 tubeVoltage 42.1
+true
+$xrayclient localhost 4242 takePicture {}
 This is a picture ;)
 ```
 
@@ -162,8 +162,7 @@ package "Server" {
         -float x
         -float y
         ..
-        -double voltage
-        -double current
+        -Config config 
         ..
         -int examinerId
         -std::string anomalies
@@ -204,6 +203,10 @@ package "Server" {
             knee
             foot
         }
+        struct Config {
+            -double voltage
+            -double current
+        }
         
     }
     together {
@@ -217,6 +220,7 @@ package "Server" {
             -int day
         }
     }
+    
     PatientData -[hidden]-> Time 
 
 @enduml  
@@ -225,16 +229,16 @@ package "Server" {
 
 ## Implement user story
 
-The sales team had mde the following nodes during a meeting with the cutomer. Review the notes in a team meeting and make a plan how to implement the described features. Afterward implement and test the new features.
+The sales team had made the following notes during a meeting with the cutomer. Review the notes in a team meeting and make a plan on how to implement the described features. Afterward implement and test the new features.
 
-Since the X-ray is a medicine product it needs to make shure that it woorks correct. Therefore a check routine should be perforemd every time the client is started. The following points are part of the evaluation:
+Since the X-ray is a medicine product it needs to make shure that it works correctly. Therefore a check routine should be perforemd every time the client is started. The following points are part of the evaluation:
 
 * The server should provide a semantic versioning (major.minor.patch)
 * The client should verify its compatibility with the server version.
-* The server needs one minute to start the x-ray tube. This behaviour needs to be simmulated by the server.
+* The server needs one minute to start the x-ray tube. This behaviour needs to be simulated by the server.
 * The client should make shure that the server is ready to respond.
 
-## Helpfull ressources
+## Helpful ressources
 
 C++:
 * [hackingcpp](https://hackingcpp.com)

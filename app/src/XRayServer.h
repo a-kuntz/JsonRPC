@@ -43,7 +43,7 @@ struct takePicture : public jsonrpc::rpc::IMethod
 private:
 	double& _value;
 };
-struct Status
+struct Config
 {
 	double value   = 0.0;
 	double voltage = 0.0;
@@ -57,7 +57,7 @@ public:
 
 private:
 	jsonrpc::rpc::Dispatcher      dsp;
-	Status                        status;
+	Config                        config;
 	jsonrpc::net::ServerTransport transport;
 };
 } // namespace xray

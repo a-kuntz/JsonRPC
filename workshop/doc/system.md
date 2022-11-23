@@ -1,7 +1,5 @@
 # Issues
 
-//TODO: Prioritize issus and connect with user storys
-
 1.  `setBodyPart(BodyPart bpart): bool`
     * Sets the body part
     * ?You have to implement an enum which represents the BodyParts?
@@ -39,90 +37,3 @@
 11. `getDosage(): std::float`
     * Returns the dosage emitted to the patient
     * The dosage is calculated by the following formula: dos=(current + voltage)/2#
-
-## User Story
-
-1. Add patient data into picture
-
-In the past, there has often been confusion between the X-ray scans of different patients. The hospitals tried to prevent that issue by labeling the pictures afterward. Usually that meant that a hospital employee printed out the picture and sticked a patient data sticker on it. This sticker included the sure and last name, the patient number and the date of birth. In the new system this sould not be necessary anymore. The system should work digital only. Because of safety reasons the label should be added to the picture as soon as possible.
-
-1. Different pictures for different combinations of parameter
-
-The delivery of the X-ray tube and camera is delayed because of supply chain issues. Nevertheless the marketing department of your customer decided to present a dummy of the system at a fair. For this purpose the X-Ray should behave like the finished system. Therefore, the X-ray should return a dummy picture. In reality this picture would depend on the given parameters, expecally the body part, the volatge and the current. The dummy picture should behave the same way.
-
-1. automatic system check
-
-Since the X-ray is a medicine product it needs to make shure that it woorks correct. Therefore a check routine should be perforemd every time the client is started. The following points are part of the evaluation:
-
-* The server should provide a semantic vershioning (major.minor.patch)
-* The client should verify its compatibility with the server version.
-* The server needs one minute to start the x-ray tube. This behaviour needs to be simmulated by the server.
-* The client should make shure that the server is ready to respond.
-
-## Issues #2
-
-1. `getScan(BodyPart bpart, PatientData pdata, float x, float y): std::string`
-   * Calls the functions implemented in the first Iteration (Class: XRayScan)
-   * returns the results of the getStatus-function
-2. `getTube(double voltage, double current): std::string`
-   * Calls the functions in the class XRayTube 
-   * returns the results of the getStatus-function
-3. `getActor(int examinerId, std::string anomalies): std::string`
-   * Calls the functions implemented in the first Iteration (Class: Actor)
-   * returns the results of the getStatus-function
-4. `getSettings(DateTime date, Time time): std::string`
-   * Calls the functions implemented in the first Iteration (Class: Settings)
-   * returns the results of the getSystemStatus-function
-  
-After refactoring, the server should look like this.
-
-```plantuml
-@startuml
-title "Second Iteration:"
-package "Server"{
-class ServerInterface{
-    + {static} int ServerID
-    +getScan(): *XRayScan
-    +getTube(): *XRayTube
-    +getActor(): *Actor
-    +getSettings(): *Settings
-}
-class XRayScan{
-    -std::string name
-    -int age
-    -int id
-    +setBodyPart(BodyPart bpart)
-    +setPatientData(std::string name, int age, int id)
-    +adjustBeam(float x, float y)
-    +getStatus(): std::string
-    }
-class XRayTube{
-    -double voltage
-    -double current
-    +takePicture(): char[]
-    +setTubeCurrent(double current): bool
-    +setTubeVoltage(double voltage): bool
-    +getStatus(): std::string    
-    +getDosage(): std::float
-}
-class Actor{
-    -int examinerId
-    -std::string anomalies
-    +setExaminer(int id)
-    +setAnomalies(std:string)
-}
-class Settings{
-    -DateTime date
-    -Time time
-    +setDate(DateTime date)
-    +setTime(Time time)
-    +getSystemStatus(): std::string
-}
-ServerInterface *-- "1" XRayTube
-ServerInterface *-- "1" Actor
-ServerInterface *-- "0..1" XRayScan
-ServerInterface *-- "1" Settings
-}
-@enduml
-```
-

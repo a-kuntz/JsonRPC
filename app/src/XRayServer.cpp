@@ -13,8 +13,7 @@ xray::setTubeVoltage::setTubeVoltage(double& voltage)
 {}
 rpc::Json xray::setTubeVoltage::call(const rpc::Json& data) //override
 {
-
-	if (_voltage > 0 && _voltage <= 100)
+	if (data > 0 && data <= 100)
 	{
 		_voltage = data;
 		return true;
@@ -30,8 +29,7 @@ xray::setTubeCurrent::setTubeCurrent(double& current)
 {}
 rpc ::Json xray::setTubeCurrent::call(const rpc::Json& data) //override
 {
-
-	if (_current > 0 && _current <= 100)
+	if (data > 0 && data <= 100)
 	{
 		_current = data;
 		return true;
@@ -61,14 +59,14 @@ xray::takePicture::takePicture(double& value)
 {}
 rpc ::Json xray::takePicture::call(const rpc::Json& data) //override
 {
-	return "Picture taken.";
+	return "This is a picture ;)";
 }
 
 xray::Server::Server(boost::asio::io_context& io_context, int port)
 	: transport(io_context, port, dsp)
 {
-	dsp.add<setTubeVoltage>("setTubeVoltage", status.voltage);
-	dsp.add<setTubeCurrent>("setTubeCurrent", status.current);
-	dsp.add<getTubeConfig>("getTubeConfig", status.voltage, status.current);
-	dsp.add<takePicture>("takePicture", status.value);
+	dsp.add<setTubeVoltage>("setTubeVoltage", config.voltage);
+	dsp.add<setTubeCurrent>("setTubeCurrent", config.current);
+	dsp.add<getTubeConfig>("getTubeConfig", config.voltage, config.current);
+	dsp.add<takePicture>("takePicture", config.value);
 };
