@@ -64,12 +64,12 @@ public:
 
 TEST_F(XRayServerTest, Workshop)
 {
-	xray::Status status;
+	xray::Config config;
 
-	_dispatcher.add<xray::setTubeVoltage>("setTubeVoltage", status.voltage);
-	_dispatcher.add<xray::setTubeCurrent>("setTubeCurrent", status.current);
-	_dispatcher.add<xray::getTubeConfig>("getTubeConfig", status.voltage, status.current);
-	_dispatcher.add<xray::takePicture>("takePicture", status.value);
+	_dispatcher.add<xray::setTubeVoltage>("setTubeVoltage", config.voltage);
+	_dispatcher.add<xray::setTubeCurrent>("setTubeCurrent", config.current);
+	_dispatcher.add<xray::getTubeConfig>("getTubeConfig", config.voltage, config.current);
+	_dispatcher.add<xray::takePicture>("takePicture", config.value);
 
 	ASSERT_EQ(call("setTubeVoltage", "42.0"), expect(R"(true)"));
 	ASSERT_EQ(call("setTubeCurrent", "22.4"), expect(R"(true)"));

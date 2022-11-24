@@ -59,7 +59,7 @@ xray::takePicture::takePicture(double& value)
 {}
 rpc ::Json xray::takePicture::call(const rpc::Json& data) //override
 {
-	return "This is a picture ;)";
+	return "Picture taken.";
 }
 
 xray::Server::Server(boost::asio::io_context& io_context, int port)
