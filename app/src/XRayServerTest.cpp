@@ -73,6 +73,6 @@ TEST_F(XRayServerTest, Workshop)
 
 	ASSERT_EQ(call("setTubeVoltage", "42.0"), expect(R"(true)"));
 	ASSERT_EQ(call("setTubeCurrent", "22.4"), expect(R"(true)"));
-	//ASSERT_EQ(call("getTubeConfig", "{}"), expect(R"("Current: 22.4, Voltage: 42.0")"));
-	ASSERT_EQ(call("takePicture", R"({})"), expect(R"("Picture taken.")"));
+	ASSERT_EQ(call("getTubeConfig", "{}"), expect(R"({"Current":22.4,"Voltage":42.0})"));
+	ASSERT_EQ(call("takePicture", "{}"), expect(R"("Picture taken.")"));
 }

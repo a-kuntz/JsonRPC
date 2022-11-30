@@ -8,7 +8,6 @@ The main goals of the workshop are:
 - focus on software development process
 - software development is teamwork
 
-TODO: Cheat Sheet C++/JSON/CMake?
 
 ## Scope
 
@@ -236,7 +235,7 @@ Since the X-ray is a medicine product it needs to make shure that it works corre
 * The server should provide a semantic versioning (major.minor.patch)
 * The client should verify its compatibility with the server version.
 * The server needs one minute to start the x-ray tube. This behaviour needs to be simulated by the server.
-* The client should make shure that the server is ready to respond.
+* The client should make shure that the server is ready to responde
 
 ## Helpful ressources
 

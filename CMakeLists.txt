@@ -37,6 +37,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 add_subdirectory(lib)
 
 if(BUILD_APP)
+    enable_testing()
     add_subdirectory(app)
 endif()
 
