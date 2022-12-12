@@ -20,6 +20,8 @@ The X-ray machine consists of two hardware components:
     1. Terminal (Client)
     2. X-ray (Server)
 
+![firstServer](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/a-kuntz/JsonRPC/branch/feature/workshop/workshop/doc/plantuml/firstServer.txt)
+
 ```plantuml
 @startuml firstServer
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
@@ -221,9 +223,9 @@ package "Server" {
     }
     
     PatientData -[hidden]-> Time 
-
-@enduml  
 }
+@enduml  
+
 ```
 
 ## Implement user story
