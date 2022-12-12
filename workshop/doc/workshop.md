@@ -22,18 +22,6 @@ The X-ray machine consists of two hardware components:
 
 ![firstServer](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/a-kuntz/JsonRPC/branch/feature/workshop/workshop/doc/plantuml/firstServer.txt)
 
-```plantuml
-@startuml firstServer
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-title "Project Structure:"
-Person(user, "User")
-Container(server, "X-Ray", "Server")
-Container(client, "Terminal", "Client")
-BiRel_R(server, client, "Comunicate", "JSON")
-BiRel_R(client, user, "interacts")
-@enduml
-```
-
 In this configuration the X-ray acts as a server and the terminal as a client.
 The server provides various functions, which can be called by the client. The operator only interacts with the client.
 
@@ -43,34 +31,11 @@ As a Request, the client sends a JSON object to the server, in which the functio
 
 As a Response, the server also returns a JSON object. This contains the result of the called function.
 
-```plantuml
-@startuml
-title Server client communication using JSON
-actor User
-User -> Client: setTubeVoltage 20.5
-Client -> Server: {method: setTubeVoltage,params: [20.5]}
-Server --> Client: {result: true}
-Client --> User: Voltage has been set succesfully!
-User -> Client: setTubeCurrent 10.5
-Client -> Server: {method: setTubeCurrent,params: [10.5]}
-Server --> Client: {result: true}
-Client --> User: Current has been set succesfully!
-@enduml
-```
+![ServerClientCommunicationUsingJSON](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/a-kuntz/JsonRPC/branch/feature/workshop/workshop/doc/plantuml/server_client_communication.txt)
 
 Currently the system supports four functions. The functions `takePicture`, `setTubeVoltage`, `setTubeCurrent` and `getTubeConfig`. The following class diagram shows the current structure of the server:
 
-```plantuml
-@startuml
-title "Server:"
-class XRayServer{
-    +setTubeCurrent(double current): bool
-    +setTubeVoltage(double voltage): bool
-    +takePicture(): char[]
-    +getTubeConfig(): xray::Config
-}
-@enduml
-```
+![ClassDiagrammServer](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/a-kuntz/JsonRPC/branch/feature/workshop/workshop/doc/plantuml/class_diagramm_server.txt)
 
 ## Sample client server session
 
@@ -153,80 +118,7 @@ make all test
 
 In the GitHub Repo you will find a list of issues. Every issue represents a new feature which should be implemented. Please plan your work together before starting to implement the features. Maybe a team meeting is helpful for this. Please organize in a group of two to implement one issue. Please note that every new feature should be tested sufficent with unit tests. After all features have been implemented the server should look like this:
 
-```plantuml
-@startuml
-title "Implemented Issues:"
-package "Server" {
-    interface "Functions" { 
-        -BodyPart bpart
-        -PatientData pdata
-        -float x
-        -float y
-        ..
-        -Config config 
-        ..
-        -int examinerId
-        -std::string anomalies
-        ..
-        -int ServerID
-        -DateTime date
-        -Time time
-        ==
-        +setBodyPart(BodyPart bpart): bool
-        +setPatientData(PatientData pdata): bool
-        +adjustBeam(float x, float y): bool
-        +getScanConfig(): xray:Config 
-
-        +setTubeCurrent(double current): bool
-        +setTubeVoltage(double voltage): bool 
-        +takePicture(): char[]
-        +getTubeConfig(): xray::Config
-        +getDosage(): std::float
-        
-        +setExaminer(int id): bool
-        +setAnomalies(std:string): bool
-        +getActorConfig(): xray::Config
-  
-        +setDate(DateTime date): bool
-        +setTime(Time time): bool 
-        +getSystemStatus(): std::string
-    }
-    together {
-        struct PatientData {
-            -std::string name
-            -int age
-            -int id
-        }
-        enum BodyPart {
-            thorax
-            hand
-            spine
-            knee
-            foot
-        }
-        struct Config {
-            -double voltage
-            -double current
-        }
-        
-    }
-    together {
-        struct Time{
-            -int hour
-            -int minute
-        }
-        struct DateTime{
-            -int year
-            -int month
-            -int day
-        }
-    }
-    
-    PatientData -[hidden]-> Time 
-}
-@enduml  
-
-```
+![ClassDiagrammImplementedIssues](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/a-kuntz/JsonRPC/branch/feature/workshop/workshop/doc/plantuml/class_diagramm_implemented_issues.txt)
 
 ## Implement user story
 
