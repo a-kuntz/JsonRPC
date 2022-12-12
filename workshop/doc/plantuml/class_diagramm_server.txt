@@ -1,0 +1,9 @@
+@startuml
+title "Server:"
+class XRayServer{
+    +setTubeCurrent(double current): bool
+    +setTubeVoltage(double voltage): bool
+    +takePicture(): char[]
+    +getTubeConfig(): xray::Config
+}
+@enduml

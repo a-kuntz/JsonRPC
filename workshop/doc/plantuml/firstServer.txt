@@ -1,0 +1,9 @@
+@startuml firstServer
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+title "Project Structure:"
+Person(user, "User")
+Container(server, "X-Ray", "Server")
+Container(client, "Terminal", "Client")
+BiRel_R(server, client, "Comunicate", "JSON")
+BiRel_R(client, user, "interacts")
+@enduml
