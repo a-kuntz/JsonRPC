@@ -42,7 +42,7 @@ rpc ::Json xray::setTubeCurrent::call(const rpc::Json& data) //override
 
 xray::getTubeConfig::getTubeConfig(double& voltage, double& current)
 	: _voltage(voltage)
-	, _current(current)
+	, _current(voltage)
 {}
 rpc ::Json xray::getTubeConfig::call(const rpc::Json& data) //override
 {
@@ -59,7 +59,7 @@ xray::takePicture::takePicture(double& value)
 {}
 rpc ::Json xray::takePicture::call(const rpc::Json& data) //override
 {
-	return "Picture taken.;
+	return "Picture taken!";
 }
 
 xray::Server::Server(boost::asio::io_context& io_context, int port)

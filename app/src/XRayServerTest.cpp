@@ -71,8 +71,8 @@ TEST_F(XRayServerTest, Workshop)
 	_dispatcher.add<xray::getTubeConfig>("getTubeConfig", config.voltage, config.current);
 	_dispatcher.add<xray::takePicture>("takePicture", config.value);
 
-	ASSERT_EQ(call("setTubeVoltage", "42.0"), expect(R"(true)"));
 	ASSERT_EQ(call("setTubeCurrent", "22.4"), expect(R"(true)"));
+	ASSERT_EQ(call("setTubeVoltage", "42.0"), expect(R"(true)"));
 	ASSERT_EQ(call("getTubeConfig", "{}"), expect(R"({"Current":22.4,"Voltage":42.0})"));
 	ASSERT_EQ(call("takePicture", "{}"), expect(R"("Picture taken.")"));
 }

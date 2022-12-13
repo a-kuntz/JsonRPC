@@ -42,15 +42,15 @@ Currently the system supports four functions. The functions `takePicture`, `setT
 To run the server start the server at the terminal with a port number:
 
 ```shell
-xrayserver 4242 
+./xrayserver 4242
 ```
 
 On a second terminal you can now send commands from the client to the server using command line arguments:
 
 ```shell
-xrayclient localhost 4242 setTubeCurrent 12.3
-xrayclient localhost 4242 setTubeVoltage 42.1
-xrayclient localhost 4242 takePicture {}
+./xrayclient localhost 4242 setTubeCurrent 12.3
+./xrayclient localhost 4242 setTubeVoltage 42.1
+./xrayclient localhost 4242 takePicture {}
 ```
 
 If everything works properly the output should look like this:
@@ -61,7 +61,7 @@ true
 $xrayclient localhost 4242 tubeVoltage 42.1
 true
 $xrayclient localhost 4242 takePicture {}
-This is a picture ;)
+Picture taken!
 ```
 
 ## Tasks
