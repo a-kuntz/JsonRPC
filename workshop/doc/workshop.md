@@ -83,7 +83,7 @@ Picture taken!
 To setup your Ubuntu 20.04 machine for building the library execute the following command
 
 ```shell
-wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/bootstrap-ubuntu-20-04.sh | sh
+wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/bootstrap-ubuntu-20-04.sh | bash
 ```
 
 ## Clone and build repository
