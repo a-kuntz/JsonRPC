@@ -91,7 +91,7 @@ wget -qO - https://raw.githubusercontent.com/a-kuntz/JsonRPC/master/scripts/boot
 Clone working copy
 
 ```shell
-git clone https://github.com/a-kuntz/JsonRPC.git
+git clone -b branch/feature/workshop https://github.com/a-kuntz/JsonRPC.git
 ```
 
 To build the library and run all examples simply run `./build.sh` inside your working copy
