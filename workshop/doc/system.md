@@ -23,17 +23,17 @@
     * Sets the ID of the performing Examiner
     * The parameter should be set to the datafield
 7.  `setAnomalies(std:: string): bool`
-    * Sets the complications occured during the exam
+    * Sets the complications occurred during the exam
     * The parameter should be set to the datafield
 8.  `getScanConfig(): xray::Config`
-    * Returns the configuation of the set parameters
-    * The information about the Patient, the Bodypart and the beam should be collected and    returned
+    * Returns the configuration of the set parameters
+    * The information about the Patient, the Bodypart and the beam should be collected and returned
 9.  `getSystemStatus(): std::string`
     * Returns the System status
     * The information about the time, date and serverId should be collected and returned
 10. `getActorConfig(): xray::Config`
     * Returns the configuration of the set parameters
-    * The information about the examinerId and the aanomalies should be collected and returned
+    * The information about the examinerId and the anomalies should be collected and returned
 11. `getDosage(): std::float`
     * Returns the dosage emitted to the patient
-    * The dosage is calculated by the following formula: dos=(current + voltage)/2#
+    * The dosage is calculated by the following formula: dos=(current + voltage)/2
