@@ -1,0 +1,71 @@
+@startuml
+title "Implemented Issues:"
+package "Server" {
+    interface "Functions" { 
+        -BodyPart bpart
+        -PatientData pdata
+        -float x
+        -float y
+        ..
+        -Config config 
+        ..
+        -int examinerId
+        -std::string anomalies
+        ..
+        -int ServerID
+        -DateTime date
+        -Time time
+        ==
+        +setBodyPart(BodyPart bpart): bool
+        +setPatientData(PatientData pdata): bool
+        +adjustBeam(float x, float y): bool
+        +getScanConfig(): xray:Config 
+
+        +setTubeCurrent(double current): bool
+        +setTubeVoltage(double voltage): bool 
+        +takePicture(): char[]
+        +getTubeConfig(): xray::Config
+        +getDosage(): std::float
+        
+        +setExaminer(int id): bool
+        +setAnomalies(std:string): bool
+        +getActorConfig(): xray::Config
+  
+        +setDate(DateTime date): bool
+        +setTime(Time time): bool 
+        +getSystemStatus(): std::string
+    }
+    together {
+        struct PatientData {
+            -std::string name
+            -int age
+            -int id
+        }
+        enum BodyPart {
+            thorax
+            hand
+            spine
+            knee
+            foot
+        }
+        struct Config {
+            -double voltage
+            -double current
+        }
+        
+    }
+    together {
+        struct Time{
+            -int hour
+            -int minute
+        }
+        struct DateTime{
+            -int year
+            -int month
+            -int day
+        }
+    }
+    
+    PatientData -[hidden]-> Time 
+}
+@enduml 

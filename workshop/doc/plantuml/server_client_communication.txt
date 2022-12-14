@@ -1,0 +1,12 @@
+@startuml
+title Server client communication using JSON
+actor User
+User -> Client: setTubeVoltage 20.5
+Client -> Server: {method: setTubeVoltage,params: [20.5]}
+Server --> Client: {result: true}
+Client --> User: Voltage has been set succesfully!
+User -> Client: setTubeCurrent 10.5
+Client -> Server: {method: setTubeCurrent,params: [10.5]}
+Server --> Client: {result: true}
+Client --> User: Current has been set succesfully!
+@enduml
